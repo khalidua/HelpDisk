@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!--
+      Emits the XML doc file that Program.cs feeds to Swagger, so the comments
+      on each controller action show up in Swagger UI.
+      CS1591 ("missing XML comment for publicly visible type") is suppressed -
+      otherwise every undocumented DTO property becomes a build warning, and a
+      wall of warnings trains people to ignore warnings.
+    -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+
+    <!--
+      Needed by the `dotnet ef` command-line tools, not by the running app.
+
+      Why it is here as well as in Infrastructure: the Infrastructure reference
+      is marked PrivateAssets="all", which stops it flowing to referencing
+      projects. That is correct - a design-time-only package has no business in
+      a deployed app's dependency graph. But `dotnet ef` inspects the STARTUP
+      project (this one) to find the design-time services, so it must be
+      referenced here too.
+
+      Without it: "Your startup project 'HelpDisk.API' doesn't reference
+      Microsoft.EntityFrameworkCore.Design." PrivateAssets keeps it out of the
+      published output either way.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!--
+    The API layer is the composition root: the one place allowed to know about
+    every other layer, because somebody has to wire them together.
+
+    Note the reference to Infrastructure. A purist would object - the outermost
+    layer should not depend on the details layer. But Program.cs must call
+    services.AddInfrastructure(...) from somewhere, and the alternative
+    (assembly scanning / a plugin loader) buys indirection nobody asked for.
+
+    So we allow it, and we contain it. Only two files in this project may
+    reference an Infrastructure type:
+
+        Program.cs
+        Extensions/MigrationExtensions.cs
+
+    Controllers depend on Application interfaces (ITicketService) and nothing
+    else. If you ever find yourself typing "using HelpDisk.Infrastructure" in a
+    controller, the design has gone wrong - see docs/architecture.md.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\HelpDisk.Application\HelpDisk.Application.csproj" />
+    <ProjectReference Include="..\HelpDisk.Infrastructure\HelpDisk.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

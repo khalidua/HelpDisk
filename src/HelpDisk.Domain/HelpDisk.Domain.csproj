@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    ============================================================================
+    THIS PROJECT HAS NO <ProjectReference> AND NO THIRD-PARTY <PackageReference>.
+    THAT IS THE POINT. IT IS NOT AN OVERSIGHT.
+    ============================================================================
+
+    The Domain layer is the centre of Clean Architecture. Every arrow points
+    inward, towards here, and nothing points out. Domain knows nothing about:
+
+      - Entity Framework, SQL Server, or any database
+      - ASP.NET Core, HTTP, controllers, or status codes
+      - JSON, Swagger, or any serialization format
+      - FluentValidation, Mapster, or any other library
+
+    Try it yourself, then undo it. Run this from the repo root:
+
+        dotnet add src/HelpDisk.Domain package Microsoft.EntityFrameworkCore
+
+    It will succeed - NuGet has no opinion about your architecture. Nothing
+    enforces this rule except the people reading the code. That is exactly why
+    it is written down here, at the one place where somebody would break it.
+
+    Why it matters: business rules that depend on no framework can be tested
+    with no mocks, survive a rewrite of the database or the web framework, and
+    stay readable to a domain expert who does not write C#.
+  -->
+
+</Project>

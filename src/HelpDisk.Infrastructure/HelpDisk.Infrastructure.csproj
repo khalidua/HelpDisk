@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The Infrastructure layer is where the messy outside world lives: databases,
+    file systems, e-mail servers, clocks, HTTP clients.
+
+    Notice the direction of the dependency. Infrastructure references
+    Application, NOT the other way round. Infrastructure exists to SATISFY
+    interfaces declared further in (ITicketRepository in Domain, ICurrentUser
+    and IDateTimeProvider in Application). It is a plug, not a foundation.
+
+    This is the layer you would rewrite to move from SQL Server to Postgres.
+    If that rewrite forces you to change Domain or Application, the
+    architecture has sprung a leak.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+
+    <!-- So AddInfrastructure can read the connection string from IConfiguration. -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HelpDisk.Application\HelpDisk.Application.csproj" />
+  </ItemGroup>
+
+</Project>

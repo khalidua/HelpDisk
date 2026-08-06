@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    The Application layer orchestrates use cases. It references Domain and
+    nothing else from this solution - in particular it does NOT reference
+    Infrastructure, even though it needs a database at runtime.
+
+    How does it get one? It declares an interface (ITicketRepository lives in
+    Domain) and lets Infrastructure implement it. That inversion is the whole
+    trick of Clean Architecture, and it is why you can read every file in this
+    project without knowing whether the data lives in SQL Server, Postgres, or
+    an in-memory list.
+
+    The two packages below are deliberate exceptions:
+      - FluentValidation: validates the SHAPE of incoming requests
+                          (required, max length, valid enum value).
+                          Business INVARIANTS live in Domain instead.
+      - Mapster:          maps entities OUT to DTOs. Note that we never map
+                          a request IN to an entity - see TicketMappingConfig
+                          for why.
+  -->
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="Mapster" Version="10.0.11" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="10.0.11" />
+
+    <!--
+      Abstractions only - note the package names. These give us IServiceCollection
+      (to write AddApplication) and ILogger<T> (for the domain event handler)
+      WITHOUT pulling in a DI container or a logging provider. Application says
+      "log this"; it never decides that logging means Serilog writing to a file.
+    -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HelpDisk.Domain\HelpDisk.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
