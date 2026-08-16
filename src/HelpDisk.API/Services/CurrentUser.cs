@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using HelpDisk.Application.Abstractions;
-using HelpDisk.Domain.Users;
-
 namespace HelpDisk.API.Services;
 
 /// <summary>
@@ -62,5 +60,7 @@ public sealed class CurrentUser : ICurrentUser
         _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name)
         ?? DemoUserName;
 
-    public UserRole Role => throw new NotImplementedException();
+    public string Role =>
+    _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role)
+    ?? throw new UnauthorizedAccessException();
 }

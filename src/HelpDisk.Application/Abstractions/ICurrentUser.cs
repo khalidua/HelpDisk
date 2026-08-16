@@ -1,5 +1,3 @@
-using HelpDisk.Domain.Users;
-
 namespace HelpDisk.Application.Abstractions;
 
 /// <summary>
@@ -33,5 +31,5 @@ public interface ICurrentUser
 {
     string UserId { get; }
     string UserName { get; }
-    UserRole Role { get; }
+    string Role { get; }
 }

@@ -5,7 +5,6 @@ using System.Text;
 using HelpDisk.Application.Abstractions;
 using HelpDisk.Application.Features.Auth;
 using HelpDisk.Domain.Shared;
-using HelpDisk.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 
 namespace HelpDisk.Infrastructure.Identity;
@@ -24,12 +23,18 @@ public sealed class IdentityService : IIdentityService
             UserName = email,
             Email = email,
             FirstName = firstName,
-            LastName = lastName,
-            Role = UserRole.Customer
+            LastName = lastName
         };
         var result = await _userManager.CreateAsync(customer, password);
 
         if (!result.Succeeded)
+        {
+            return AuthErrors.RegistrationFailed;
+        }
+
+        var roleResult = await _userManager.AddToRoleAsync(customer, "Customer");
+
+        if (!roleResult.Succeeded)
         {
             return AuthErrors.RegistrationFailed;
         }
@@ -49,7 +54,8 @@ public sealed class IdentityService : IIdentityService
         {
             return AuthErrors.InvalidCredentials;
         }
-        
-        return Result.Success(new UserInfo(user.Id, user.Email, user.FirstName, user.LastName, user.Role));
+        var roles = await _userManager.GetRolesAsync(user);
+        var role = roles.FirstOrDefault() ?? string.Empty;
+        return Result.Success(new UserInfo(user.Id, user.Email, user.FirstName, user.LastName, role));
     }
 }

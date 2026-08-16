@@ -1,6 +1,7 @@
 using HelpDisk.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-
+using HelpDisk.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 namespace HelpDisk.API.Extensions;
 
 /// <summary>
@@ -62,5 +63,9 @@ public static class MigrationExtensions
         // Creates the database if missing, then applies every pending
         // migration. No try/catch: if this fails, startup should fail.
         dbContext.Database.Migrate();
+
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+        IdentitySeeder.SeedAsync(roleManager,userManager).GetAwaiter().GetResult();
     }
 }
