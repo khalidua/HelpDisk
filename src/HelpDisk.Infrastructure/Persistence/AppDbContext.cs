@@ -1,5 +1,8 @@
 using HelpDisk.Domain.Categories;
 using HelpDisk.Domain.Tickets;
+using HelpDisk.Infrastructure.Identity;
+
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpDisk.Infrastructure.Persistence;
@@ -17,7 +20,7 @@ namespace HelpDisk.Infrastructure.Persistence;
 /// with setters. Same behaviour, but nobody can reassign them, and there is no
 /// nullable-reference warning to suppress with "= null!".
 /// </remarks>
-public sealed class AppDbContext : DbContext
+public sealed class AppDbContext : IdentityDbContext<AppUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)

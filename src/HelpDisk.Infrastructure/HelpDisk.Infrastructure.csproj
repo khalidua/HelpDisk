@@ -20,7 +20,13 @@
     architecture has sprung a leak.
   -->
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 
     <!-- So AddInfrastructure can read the connection string from IConfiguration. -->
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.10" />
@@ -32,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HelpDisk.Application\HelpDisk.Application.csproj" />
+    <ProjectReference Include="..\HelpDisk.Domain\HelpDisk.Domain.csproj" />
   </ItemGroup>
 
 </Project>

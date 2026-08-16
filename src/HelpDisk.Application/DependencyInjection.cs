@@ -1,11 +1,17 @@
 using System.Reflection;
+
 using FluentValidation;
+
 using HelpDisk.Application.Abstractions.Events;
+using HelpDisk.Application.Features.Auth;
 using HelpDisk.Application.Features.Categories;
 using HelpDisk.Application.Features.Tickets;
 using HelpDisk.Application.Features.Tickets.EventHandlers;
+
 using Mapster;
+
 using MapsterMapper;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HelpDisk.Application;
@@ -36,7 +42,7 @@ public static class DependencyInjection
         // request and start handing back stale, cross-request tracked entities.
         services.AddScoped<ITicketService, TicketService>();
         services.AddScoped<ICategoryService, CategoryService>();
-
+        services.AddScoped<IAuthService, AuthService>();
         // ---- Validators ------------------------------------------------------
         // Scans for every AbstractValidator<T> in this assembly, so adding a
         // validator needs no change here. One of the few places where scanning

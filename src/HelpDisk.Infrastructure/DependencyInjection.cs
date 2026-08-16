@@ -7,9 +7,17 @@ using HelpDisk.Infrastructure.Persistence;
 using HelpDisk.Infrastructure.Persistence.Interceptors;
 using HelpDisk.Infrastructure.Persistence.Repositories;
 using HelpDisk.Infrastructure.Services;
+using HelpDisk.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
+using System.Text;
+
 
 namespace HelpDisk.Infrastructure;
 
@@ -70,6 +78,9 @@ public static class DependencyInjection
                 serviceProvider.GetRequiredService<DomainEventsInterceptor>());
         });
 
+        // ---- Identity ---------------------------------------------------------
+        services.AddIdentityCore<AppUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+
         // ---- Repositories and unit of work -----------------------------------
         services.AddScoped<ITicketRepository, TicketRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -79,11 +90,43 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<ITokenProvider, JwtTokenProvider>();
+
         // NOTE: ICurrentUser is NOT registered here. Its implementation needs
         // IHttpContextAccessor, so it lives in the API layer - see
         // HelpDisk.API/Services/CurrentUser.cs. Infrastructure is not the only
         // layer allowed to satisfy an Application interface; whichever outer
         // layer naturally owns the dependency should.
+
+        services.Configure<JwtOptions>(
+        configuration.GetSection(JwtOptions.SectionName));
+
+        services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            var jwtOptions = configuration
+                .GetSection(JwtOptions.SectionName)
+                .Get<JwtOptions>()
+                ?? throw new InvalidOperationException(
+                    "JWT configuration was not found.");
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtOptions.Issuer,
+
+                ValidateAudience = true,
+                ValidAudience = jwtOptions.Audience,
+
+                ValidateLifetime = true,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+            };
+        });
 
         return services;
     }

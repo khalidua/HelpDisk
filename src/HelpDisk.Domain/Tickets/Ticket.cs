@@ -95,7 +95,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
         ReporterId = reporterId;
         Status = TicketStatus.New;
     }
-
+    
     public string Title { get; private set; } = null!;
 
     public string Description { get; private set; } = null!;

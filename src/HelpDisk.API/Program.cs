@@ -120,8 +120,8 @@ public static class Program
 
         app.UseHttpsRedirection();
 
-        // No UseAuthentication/UseAuthorization: this template has no auth.
-        // See Services/CurrentUser.cs for what adding it would involve.
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 
