@@ -183,8 +183,14 @@ public sealed class TicketService : ITicketService
         var page = await _tickets.SearchAsync(
             request.Keyword,
             request.Status,
+            request.Priority,
             request.CategoryId,
+            request.AssigneeId,
+            request.FromDate,
+            request.ToDate,
             reporterId,
+            request.SortBy,
+            request.Descending,
             request.Page,
             request.PageSize,
             cancellationToken);

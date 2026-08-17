@@ -73,8 +73,14 @@ public interface ITicketRepository
     Task<Pagination<Ticket>> SearchAsync(
         string? keyword,
         TicketStatus? status,
+        TicketPriority? priority,
         Guid? categoryId,
+        string? assigneeId,
+        DateTime? fromDate,
+        DateTime? toDate,
         string? reporterId,
+        string? sortBy,
+        bool descending,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default);

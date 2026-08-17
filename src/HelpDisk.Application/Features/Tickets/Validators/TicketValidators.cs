@@ -114,13 +114,37 @@ public sealed class TicketSearchRequestValidator : AbstractValidator<TicketSearc
     public TicketSearchRequestValidator()
     {
         RuleFor(x => x.Page)
-            .GreaterThan(0).WithMessage("Page must be 1 or greater.");
+            .GreaterThan(0)
+            .WithMessage("Page must be 1 or greater.");
 
         RuleFor(x => x.PageSize)
             .InclusiveBetween(1, MaxPageSize)
             .WithMessage($"PageSize must be between 1 and {MaxPageSize}.");
 
         RuleFor(x => x.Status)
-            .IsInEnum().When(x => x.Status.HasValue);
+            .IsInEnum()
+            .When(x => x.Status.HasValue);
+
+        RuleFor(x => x.Priority)
+            .IsInEnum()
+            .When(x => x.Priority.HasValue);
+
+        RuleFor(x => x.FromDate)
+            .LessThanOrEqualTo(x => x.ToDate)
+            .When(x => x.FromDate.HasValue && x.ToDate.HasValue)
+            .WithMessage("FromDate must be earlier than or equal to ToDate.");
+
+        RuleFor(x => x.SortBy)
+            .Must(BeValidSortField)
+            .When(x => !string.IsNullOrWhiteSpace(x.SortBy))
+            .WithMessage("SortBy must be CreatedOn, Priority or Status.");
+    }
+
+    private static bool BeValidSortField(string? sortBy)
+    {
+        return sortBy is null ||
+               sortBy.Equals("CreatedOn", StringComparison.OrdinalIgnoreCase) ||
+               sortBy.Equals("Priority", StringComparison.OrdinalIgnoreCase) ||
+               sortBy.Equals("Status", StringComparison.OrdinalIgnoreCase);
     }
 }

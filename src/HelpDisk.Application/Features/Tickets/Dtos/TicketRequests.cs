@@ -60,6 +60,12 @@ public sealed record AddCommentRequest(string Body, bool IsInternal = false);
 public sealed record TicketSearchRequest(
     string? Keyword = null,
     TicketStatus? Status = null,
+    TicketPriority? Priority = null,
     Guid? CategoryId = null,
+    string? AssigneeId = null,
+    DateTime? FromDate = null,
+    DateTime? ToDate = null,
+    string? SortBy = null,
+    bool Descending = true,
     int Page = 1,
     int PageSize = 20);

@@ -69,8 +69,14 @@ public sealed class TicketRepository : ITicketRepository
     public async Task<Pagination<Ticket>> SearchAsync(
         string? keyword,
         TicketStatus? status,
+        TicketPriority? priority,
         Guid? categoryId,
+        string? assigneeId,
+        DateTime? fromDate,
+        DateTime? toDate,
         string? reporterId,
+        string? sortBy,
+        bool descending,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
@@ -99,6 +105,27 @@ public sealed class TicketRepository : ITicketRepository
         {
             query = query.Where(t => t.CategoryId == categoryId.Value);
         }
+
+        if (priority.HasValue)
+        {
+            query = query.Where(t => t.Priority == priority.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(assigneeId))
+        {
+            query = query.Where(t => t.AssigneeId == assigneeId);
+        }
+
+        if (fromDate.HasValue)
+        {
+            query = query.Where(t => t.CreatedOnUtc >= fromDate.Value);
+        }
+
+        if (toDate.HasValue)
+        {
+            query = query.Where(t => t.CreatedOnUtc <= toDate.Value);
+        }
+
         if (!string.IsNullOrWhiteSpace(reporterId))
         {
             query = query.Where(t => t.ReporterId == reporterId);
