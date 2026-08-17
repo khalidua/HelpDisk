@@ -22,4 +22,13 @@ public static class CategoryErrors
     public static readonly Error NameAlreadyExists = Error.Conflict(
         "Category.NameAlreadyExists",
         "A category with this name already exists.");
+
+    public static readonly Error CannotDeleteWithTickets = Error.Conflict(
+    "Category.CannotDeleteWithTickets",
+    "A category cannot be deleted while tickets are assigned to it.");
+    public static readonly Error InvalidResponseTimeTarget = Error.Validation(
+    "Category.InvalidResponseTimeTarget",
+    "Response time target must be at least 1 hour.");
 }
+
+

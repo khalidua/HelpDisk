@@ -50,15 +50,16 @@ public sealed class Category : Entity<Guid>
     {
     }
 
-    private Category(Guid id, string name)
+    private Category(Guid id, string name, int responseTimeTargetHours)
         : base(id)
     {
         Name = name;
+        ResponseTimeTargetHours = responseTimeTargetHours;
     }
 
     public string Name { get; private set; } = null!;
-
-    public static Result<Category> Create(string name)
+    public int ResponseTimeTargetHours { get; private set; }
+    public static Result<Category> Create(string name, int responseTimeTargetHours)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -70,7 +71,12 @@ public sealed class Category : Entity<Guid>
             return CategoryErrors.NameTooLong;
         }
 
-        return new Category(Guid.NewGuid(), name.Trim());
+        if(responseTimeTargetHours < 1)
+        {
+            return CategoryErrors.InvalidResponseTimeTarget;
+        }
+
+        return new Category(Guid.NewGuid(), name.Trim(), responseTimeTargetHours);
     }
 
     public Result Rename(string name)
@@ -86,6 +92,31 @@ public sealed class Category : Entity<Guid>
         }
 
         Name = name.Trim();
+
+        return Result.Success();
+    }
+
+    public Result UpdateDetails(
+    string name,
+    int responseTimeTargetHours)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return CategoryErrors.NameRequired;
+        }
+
+        if (name.Length > NameMaxLength)
+        {
+            return CategoryErrors.NameTooLong;
+        }
+
+        if (responseTimeTargetHours < 1)
+        {
+            return CategoryErrors.InvalidResponseTimeTarget;
+        }
+
+        Name = name.Trim();
+        ResponseTimeTargetHours = responseTimeTargetHours;
 
         return Result.Success();
     }

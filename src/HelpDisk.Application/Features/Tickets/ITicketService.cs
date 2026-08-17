@@ -70,6 +70,8 @@ public interface ITicketService
     Task<Result> ReopenAsync(Guid ticketId, CancellationToken cancellationToken = default);
 
     Task<Result<Guid>> AddCommentAsync(Guid ticketId, AddCommentRequest request, CancellationToken cancellationToken = default);
-
+    Task<Result<IReadOnlyList<TicketCommentResponse>>> GetCommentsAsync(
+    Guid ticketId,
+    CancellationToken cancellationToken = default);
     Task<Result> DeleteAsync(Guid ticketId, CancellationToken cancellationToken = default);
 }

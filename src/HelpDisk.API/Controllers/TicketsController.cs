@@ -92,7 +92,7 @@ public sealed class TicketsController : ApiController
     /// <summary>Updates a ticket's title, description and priority.</summary>
     /// <remarks>Returns 409 if the ticket is closed.</remarks>
     [HttpPut("{ticketId:guid}")]
-    [Authorize(Roles = "Agent,Admin")]
+    [Authorize(Roles = "Agent,Admin")]  
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -165,6 +165,17 @@ public sealed class TicketsController : ApiController
         CancellationToken cancellationToken)
     {
         var result = await _ticketService.AddCommentAsync(ticketId, request, cancellationToken);
+        return HandleResult(result);
+    }
+
+    [HttpGet("{ticketId:guid}/comments")]
+    [ProducesResponseType(typeof(IReadOnlyList<TicketCommentResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetComments(
+    Guid ticketId,
+    CancellationToken cancellationToken)
+    {
+        var result = await _ticketService.GetCommentsAsync(ticketId, cancellationToken);
         return HandleResult(result);
     }
 

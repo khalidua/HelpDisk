@@ -20,4 +20,8 @@ public interface ICategoryService
     Task<Result<Guid>> CreateAsync(CreateCategoryRequest request, CancellationToken cancellationToken = default);
 
     Task<Result<IReadOnlyList<CategoryResponse>>> GetAllAsync(CancellationToken cancellationToken = default);
+
+    Task<Result> UpdateAsync(Guid categoryId, UpdateCategoryRequest request, CancellationToken cancellationToken = default);
+
+    Task<Result> DeleteAsync(Guid categoryId, CancellationToken cancellationToken = default);
 }

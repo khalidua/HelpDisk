@@ -367,6 +367,26 @@ public sealed class TicketService : ITicketService
         return commentResult.Value.Id;
     }
 
+    public async Task<Result<IReadOnlyList<TicketCommentResponse>>> GetCommentsAsync(Guid ticketId, CancellationToken cancellationToken = default)
+    {
+        var ticket = await _tickets.GetWithCommentsAsync(ticketId, cancellationToken);
+
+        if (ticket is null)
+        {
+            return TicketErrors.NotFound(ticketId); 
+        }
+
+        if (_currentUser.Role == "Customer" && ticket.ReporterId != _currentUser.UserId)
+        {
+            return TicketErrors.NotFound(ticketId);
+        }
+
+        var comments = ticket.Comments
+             .Where(c => _currentUser.Role != "Customer" || !c.IsInternal)
+             .Select(c => c.Adapt<TicketCommentResponse>())
+             .ToList();
+        return comments;
+    }
     /// <summary>
     /// Deletes a ticket - softly, though nothing here says so.
     /// </summary>
@@ -410,4 +430,6 @@ public sealed class TicketService : ITicketService
         Error.Validation(
             "Validation.Failed",
             string.Join(" ", validation.Errors.Select(e => e.ErrorMessage)));
+
+
 }

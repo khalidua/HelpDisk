@@ -11,6 +11,9 @@ public interface ICategoryRepository
 {
     Task<IReadOnlyList<Category>> GetAllAsync(CancellationToken cancellationToken = default);
 
+    Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<bool> HasTicketsAsync(Guid categoryId,CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -18,7 +21,9 @@ public interface ICategoryRepository
     /// collection, which no single Category instance can answer - so it belongs
     /// on the repository, not on the entity.
     /// </summary>
-    Task<bool> NameExistsAsync(string name, CancellationToken cancellationToken = default);
+    Task<bool> NameExistsAsync(string name, Guid? excludeCategoryId = null, CancellationToken cancellationToken = default);
 
     Task AddAsync(Category category, CancellationToken cancellationToken = default);
+
+    void Remove(Category category);
 }

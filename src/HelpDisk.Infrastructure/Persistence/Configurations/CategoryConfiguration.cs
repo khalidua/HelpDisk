@@ -31,5 +31,7 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
         // for humans; database constraints are for correctness. Under real
         // concurrency you want both.
         builder.HasIndex(c => c.Name).IsUnique();
+
+        builder.Property(c => c.ResponseTimeTargetHours).IsRequired();
     }
 }
