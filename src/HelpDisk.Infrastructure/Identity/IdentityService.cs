@@ -42,6 +42,29 @@ public sealed class IdentityService : IIdentityService
         return Result.Success(customer.Id);
     }
 
+    public async Task<Result<UserInfo>> GetUserAsync(
+       string userId,
+       CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user is null)
+        {
+            return AuthErrors.UserNotFound;
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var role = roles.FirstOrDefault() ?? string.Empty;
+
+        return Result.Success(
+            new UserInfo(
+                user.Id,
+                user.Email,
+                user.FirstName,
+                user.LastName,
+                role));
+    }
+
     public async Task<Result<UserInfo>> ValidateCredentialsAsync(string email, string password, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByEmailAsync(email);

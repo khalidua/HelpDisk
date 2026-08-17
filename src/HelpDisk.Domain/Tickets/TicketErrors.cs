@@ -52,6 +52,10 @@ public static class TicketErrors
         "Ticket.AssigneeRequired",
         "An assignee must be supplied.");
 
+    public static readonly Error InvalidAssignee = Error.Validation(
+    "Ticket.InvalidAssignee",
+    "A ticket can only be assigned to an agent or admin.");
+
     public static readonly Error CommentBodyRequired = Error.Validation(
         "Ticket.CommentBodyRequired",
         "A comment cannot be empty.");
@@ -82,6 +86,10 @@ public static class TicketErrors
     public static readonly Error NotClosed = Error.Conflict(
         "Ticket.NotClosed",
         "Only a closed ticket can be reopened.");
+
+    public static readonly Error CannotReopenExpiredTicket = Error.Conflict(
+    "Ticket.CannotReopenExpired",
+    "A ticket can only be reopened within 14 days of being closed.");
 
     public static readonly Error CannotEditClosedTicket = Error.Conflict(
         "Ticket.CannotEditClosed",

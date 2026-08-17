@@ -54,12 +54,15 @@ public sealed class TicketService : ITicketService
     private readonly ITicketRepository _tickets;
     private readonly ICategoryRepository _categories;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IIdentityService _identityService;
     private readonly ICurrentUser _currentUser;
     private readonly IValidator<CreateTicketRequest> _createValidator;
     private readonly IValidator<UpdateTicketRequest> _updateValidator;
     private readonly IValidator<AssignTicketRequest> _assignValidator;
     private readonly IValidator<AddCommentRequest> _commentValidator;
     private readonly IValidator<TicketSearchRequest> _searchValidator;
+
+
 
     public TicketService(
         ITicketRepository tickets,
@@ -70,7 +73,8 @@ public sealed class TicketService : ITicketService
         IValidator<UpdateTicketRequest> updateValidator,
         IValidator<AssignTicketRequest> assignValidator,
         IValidator<AddCommentRequest> commentValidator,
-        IValidator<TicketSearchRequest> searchValidator)
+        IValidator<TicketSearchRequest> searchValidator,
+        IIdentityService identityService)
     {
         _tickets = tickets;
         _categories = categories;
@@ -81,6 +85,7 @@ public sealed class TicketService : ITicketService
         _assignValidator = assignValidator;
         _commentValidator = commentValidator;
         _searchValidator = searchValidator;
+        _identityService = identityService;
     }
 
     /// <summary>
@@ -147,6 +152,11 @@ public sealed class TicketService : ITicketService
         {
             // "Not found" is an ordinary outcome, not an exception. It becomes
             // a 404 in ApiController - but this layer never says "404".
+            return TicketErrors.NotFound(ticketId);
+        }
+
+        if(_currentUser.Role == "Customer" && ticket.ReporterId != _currentUser.UserId)
+        {
             return TicketErrors.NotFound(ticketId);
         }
 
@@ -232,6 +242,18 @@ public sealed class TicketService : ITicketService
         {
             return TicketErrors.NotFound(ticketId);
         }
+        var assigneeResult = await _identityService.GetUserAsync(request.AssigneeId, cancellationToken);
+
+        if (assigneeResult.IsFailure)
+        {
+            return assigneeResult.Error;
+        }
+
+        if (assigneeResult.Value.Role != "Agent" &&
+            assigneeResult.Value.Role != "Admin")
+        {
+            return TicketErrors.InvalidAssignee;
+        }
 
         // One line of business logic. Everything around it is plumbing - which
         // is exactly the ratio you want in an application service.
@@ -275,7 +297,13 @@ public sealed class TicketService : ITicketService
             return TicketErrors.NotFound(ticketId);
         }
 
+        if(_currentUser.Role != "Customer" || ticket.ReporterId != _currentUser.UserId)
+        {
+            return TicketErrors.NotFound(ticketId);
+        }
+
         var result = ticket.Reopen();
+
         if (result.IsFailure)
         {
             return result;
@@ -309,6 +337,11 @@ public sealed class TicketService : ITicketService
 
         var ticket = await _tickets.GetWithCommentsAsync(ticketId, cancellationToken);
         if (ticket is null)
+        {
+            return TicketErrors.NotFound(ticketId);
+        }
+
+        if(_currentUser.Role == "Customer" && ticket.ReporterId != _currentUser.UserId)
         {
             return TicketErrors.NotFound(ticketId);
         }

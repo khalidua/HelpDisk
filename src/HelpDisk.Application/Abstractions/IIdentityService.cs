@@ -15,5 +15,7 @@ public interface IIdentityService
         string lastName,
         CancellationToken cancellationToken = default);
     Task<Result<UserInfo>> ValidateCredentialsAsync(string email, string password, CancellationToken cancellationToken = default);
-
+    Task<Result<UserInfo>> GetUserAsync(
+    string userId,
+    CancellationToken cancellationToken = default);
 }

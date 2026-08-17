@@ -92,6 +92,7 @@ public sealed class TicketsController : ApiController
     /// <summary>Updates a ticket's title, description and priority.</summary>
     /// <remarks>Returns 409 if the ticket is closed.</remarks>
     [HttpPut("{ticketId:guid}")]
+    [Authorize(Roles = "Agent,Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -112,6 +113,7 @@ public sealed class TicketsController : ApiController
     /// what the business DOES age better than routes that mirror table columns.
     /// </remarks>
     [HttpPut("{ticketId:guid}/assign")]
+    [Authorize(Roles = "Agent,Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -126,6 +128,7 @@ public sealed class TicketsController : ApiController
 
     /// <summary>Closes a ticket.</summary>
     [HttpPut("{ticketId:guid}/close")]
+    [Authorize(Roles = "Agent,Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -167,6 +170,7 @@ public sealed class TicketsController : ApiController
 
     /// <summary>Deletes a ticket (soft delete - the row survives).</summary>
     [HttpDelete("{ticketId:guid}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid ticketId, CancellationToken cancellationToken)

@@ -269,6 +269,11 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
             return TicketErrors.NotClosed;
         }
 
+        if(ClosedOnUtc is null || DateTime.UtcNow - ClosedOnUtc.Value > TimeSpan.FromDays(14))
+        {
+            return TicketErrors.CannotReopenExpiredTicket;
+        }
+
         // Reopening returns the ticket to whoever had it, or to the unassigned
         // queue if nobody did. Encoding that here means every caller reopens a
         // ticket the same way.
