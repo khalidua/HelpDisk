@@ -78,3 +78,25 @@ public static class PaginationMappingExtensions
             HasPreviousPage: page.HasPreviousPage,
             HasNextPage: page.HasNextPage);
 }
+
+public static class TicketMappingExtensions
+{
+    public static TicketResponse ToResponse(
+        this Ticket ticket,
+        string currentUserRole)
+    {
+        var response = ticket.Adapt<TicketResponse>();
+
+        if (currentUserRole == "Customer")
+        {
+            response = response with
+            {
+                Comments = response.Comments
+                    .Where(c => !c.IsInternal)
+                    .ToList()
+            };
+        }
+
+        return response;
+    }
+}

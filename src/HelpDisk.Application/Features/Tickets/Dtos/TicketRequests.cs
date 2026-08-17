@@ -51,7 +51,7 @@ public sealed record AssignTicketRequest(string AssigneeId);
 /// <summary>
 /// Likewise no AuthorId - that comes from ICurrentUser.
 /// </summary>
-public sealed record AddCommentRequest(string Body);
+public sealed record AddCommentRequest(string Body, bool IsInternal = false);
 
 /// <summary>
 /// Search filters. Every field is optional; supplying none returns page 1 of

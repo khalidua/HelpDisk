@@ -327,7 +327,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
     /// enforced by the ticket - not by a comment service that would have to
     /// remember to load the parent and check its status.
     /// </remarks>
-    public Result<TicketComment> AddComment(string body, string authorId)
+    public Result<TicketComment> AddComment(string body, string authorId, bool isInternal)
     {
         if (Status == TicketStatus.Closed)
         {
@@ -344,7 +344,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
             return TicketErrors.CommentBodyTooLong;
         }
 
-        var comment = new TicketComment(Guid.NewGuid(), Id, body.Trim(), authorId);
+        var comment = new TicketComment(Guid.NewGuid(), Id, body.Trim(), authorId, isInternal);
         _comments.Add(comment);
 
         return comment;

@@ -94,4 +94,8 @@ public static class TicketErrors
     public static readonly Error CannotEditClosedTicket = Error.Conflict(
         "Ticket.CannotEditClosed",
         "A closed ticket cannot be edited. Reopen it first.");
+
+    public static readonly Error InternalCommentNotAllowed = Error.Validation(
+    "Ticket.InternalCommentNotAllowed",
+    "Customers cannot create internal comments.");
 }

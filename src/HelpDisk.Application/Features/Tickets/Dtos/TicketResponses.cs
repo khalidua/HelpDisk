@@ -45,7 +45,8 @@ public sealed record TicketCommentResponse(
     Guid Id,
     string Body,
     string AuthorId,
-    DateTime CreatedOnUtc);
+    DateTime CreatedOnUtc,
+    bool IsInternal);
 
 /// <summary>
 /// The trimmed shape used in search results. No Description, no Comments.

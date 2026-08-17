@@ -160,7 +160,7 @@ public sealed class TicketService : ITicketService
             return TicketErrors.NotFound(ticketId);
         }
 
-        return ticket.Adapt<TicketResponse>();
+        return ticket.ToResponse(_currentUser.Role);
     }
 
     public async Task<Result<PagedResponse<TicketListItemResponse>>> SearchAsync(
@@ -345,8 +345,12 @@ public sealed class TicketService : ITicketService
         {
             return TicketErrors.NotFound(ticketId);
         }
+        if (_currentUser.Role == "Customer" && request.IsInternal)
+        {
+            return TicketErrors.InternalCommentNotAllowed;
+        }
 
-        var commentResult = ticket.AddComment(request.Body, _currentUser.UserId);
+        var commentResult = ticket.AddComment(request.Body, _currentUser.UserId, request.IsInternal);
         if (commentResult.IsFailure)
         {
             return commentResult.Error;

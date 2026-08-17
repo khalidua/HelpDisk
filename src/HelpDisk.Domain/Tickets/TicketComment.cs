@@ -36,12 +36,13 @@ public sealed class TicketComment : Entity<Guid>
     /// Internal so that only the Domain assembly - in practice, only
     /// <see cref="Ticket.AddComment"/> - can create one.
     /// </summary>
-    internal TicketComment(Guid id, Guid ticketId, string body, string authorId)
+    internal TicketComment(Guid id, Guid ticketId, string body, string authorId, bool isInternal)
         : base(id)
     {
         TicketId = ticketId;
         Body = body;
         AuthorId = authorId;
+        IsInternal = isInternal;
     }
 
     public Guid TicketId { get; private set; }
@@ -49,4 +50,5 @@ public sealed class TicketComment : Entity<Guid>
     public string Body { get; private set; } = null!;
 
     public string AuthorId { get; private set; } = null!;
+    public bool IsInternal { get; private set; }
 }
