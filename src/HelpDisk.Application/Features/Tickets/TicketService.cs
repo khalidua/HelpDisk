@@ -163,14 +163,21 @@ public sealed class TicketService : ITicketService
             return ToValidationError(validation);
         }
 
+        string? reporterId = null;
+
+        if (_currentUser.Role == "Customer")
+        {
+            reporterId = _currentUser.UserId;
+        }
+
         var page = await _tickets.SearchAsync(
             request.Keyword,
             request.Status,
             request.CategoryId,
+            reporterId,
             request.Page,
             request.PageSize,
             cancellationToken);
-
         // Pagination<Ticket> -> PagedResponse<TicketListItemResponse>.
         // The entities stop here; only DTOs go out.
         return page.ToPagedResponse(t => t.Adapt<TicketListItemResponse>());

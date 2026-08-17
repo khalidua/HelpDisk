@@ -74,6 +74,7 @@ public interface ITicketRepository
         string? keyword,
         TicketStatus? status,
         Guid? categoryId,
+        string? reporterId,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default);

@@ -70,6 +70,7 @@ public sealed class TicketRepository : ITicketRepository
         string? keyword,
         TicketStatus? status,
         Guid? categoryId,
+        string? reporterId,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
@@ -98,7 +99,10 @@ public sealed class TicketRepository : ITicketRepository
         {
             query = query.Where(t => t.CategoryId == categoryId.Value);
         }
-
+        if (!string.IsNullOrWhiteSpace(reporterId))
+        {
+            query = query.Where(t => t.ReporterId == reporterId);
+        }
         var totalItems = await query.CountAsync(cancellationToken);
 
         var items = await query

@@ -23,11 +23,12 @@ public sealed class JwtTokenProvider : ITokenProvider
     public Task<Result<TokenResponse>> GenerateTokenAsync(UserInfo userInfo, CancellationToken cancellationToken = default)
     {
         var claims = new List<Claim>
-            {
-                new (ClaimTypes.NameIdentifier, userInfo.UserId),
-                new (ClaimTypes.Email, userInfo.Email ?? string.Empty),
-                new (ClaimTypes.Role, userInfo.Role)
-            };
+        {
+            new(ClaimTypes.NameIdentifier, userInfo.UserId),
+            new(ClaimTypes.Name, $"{userInfo.FirstName} {userInfo.LastName}"),
+            new(ClaimTypes.Email, userInfo.Email ?? string.Empty),
+            new(ClaimTypes.Role, userInfo.Role)
+        };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
 

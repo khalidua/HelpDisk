@@ -2,6 +2,7 @@ using HelpDisk.API.Abstractions;
 using HelpDisk.Application.Features.Tickets;
 using HelpDisk.Application.Features.Tickets.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HelpDisk.API.Controllers;
 
@@ -35,6 +36,8 @@ namespace HelpDisk.API.Controllers;
 /// command instead of calling a service. Same thinness, one more hop of
 /// indirection.)
 /// </remarks>
+
+[Authorize]
 [Route("api/tickets")]
 public sealed class TicketsController : ApiController
 {

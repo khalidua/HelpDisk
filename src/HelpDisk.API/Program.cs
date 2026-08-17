@@ -1,10 +1,15 @@
 using System.Text.Json.Serialization;
+
 using HelpDisk.API.Extensions;
 using HelpDisk.API.Middleware;
 using HelpDisk.API.Services;
+
 using HelpDisk.Application;
 using HelpDisk.Application.Abstractions;
+
 using HelpDisk.Infrastructure;
+
+using Microsoft.OpenApi;
 
 namespace HelpDisk.API;
 
@@ -59,10 +64,12 @@ public static class Program
                 // Numeric enums in JSON are a long-running source of client
                 // bugs - the meaning of 3 changes the day somebody inserts a
                 // value, and no client notices until it is wrong.
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter());
             });
 
         builder.Services.AddEndpointsApiExplorer();
+
         builder.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new()
@@ -73,6 +80,30 @@ public static class Program
                     "A Clean Architecture + DDD teaching template. " +
                     "Create a category first, then a ticket that references it."
             });
+
+            // ---- JWT authentication -----------------------------------------
+            // Swagger needs to know that this API uses Bearer tokens so it can
+            // display the Authorize button and send the JWT in the
+            // Authorization header when calling protected endpoints.
+            //
+            // This does NOT perform authentication itself. ASP.NET Core's
+            // JwtBearer middleware, registered by Infrastructure, is still
+            // responsible for validating the token.
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Enter your JWT token."
+            });
+
+            options.AddSecurityRequirement(document =>
+                new OpenApiSecurityRequirement
+                {
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                });
 
             // Surfaces the XML doc comments from the controllers in Swagger UI,
             // so the explanations in this codebase are visible while exploring
@@ -104,9 +135,12 @@ public static class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
+
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "HelpDisk API v1");
+                options.SwaggerEndpoint(
+                    "/swagger/v1/swagger.json",
+                    "HelpDisk API v1");
 
                 // Serve Swagger UI at the root so pressing F5 lands somewhere
                 // useful instead of on a 404.
@@ -120,7 +154,12 @@ public static class Program
 
         app.UseHttpsRedirection();
 
+        // Authentication reads and validates the JWT and populates
+        // HttpContext.User with its claims.
         app.UseAuthentication();
+
+        // Authorization checks policies and roles such as [Authorize] and
+        // [Authorize(Roles = "Admin")].
         app.UseAuthorization();
 
         app.MapControllers();

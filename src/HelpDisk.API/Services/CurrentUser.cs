@@ -43,9 +43,6 @@ namespace HelpDisk.API.Services;
 public sealed class CurrentUser : ICurrentUser
 {
     /// <summary>Used when no authenticated user is present.</summary>
-    public const string DemoUserId = "demo-user";
-
-    public const string DemoUserName = "Demo User";
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -54,11 +51,11 @@ public sealed class CurrentUser : ICurrentUser
 
     public string UserId =>
         _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
-        ?? DemoUserId;
+        ?? throw new UnauthorizedAccessException();
 
     public string UserName =>
         _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name)
-        ?? DemoUserName;
+        ?? throw new UnauthorizedAccessException();
 
     public string Role =>
     _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role)

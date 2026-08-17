@@ -1,7 +1,10 @@
-﻿using HelpDisk.API.Abstractions;
+﻿using System.Security.Claims;
+
+using HelpDisk.API.Abstractions;
 using HelpDisk.Application.Features.Auth;
 using HelpDisk.Application.Features.Auth.Dtos;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace HelpDisk.API.Controllers;
 
@@ -28,4 +31,5 @@ public class AuthController : ApiController
         var result = await _authService.LoginAsync(request, cancellationToken);
         return HandleResult(result);
     }
+
 }
