@@ -76,6 +76,7 @@ public sealed class TicketRepository : ITicketRepository
         DateTime? fromDate,
         DateTime? toDate,
         string? reporterId,
+        Guid? companyId,
         string? sortBy,
         bool descending,
         int page,
@@ -131,6 +132,15 @@ public sealed class TicketRepository : ITicketRepository
         {
             query = query.Where(t => t.ReporterId == reporterId);
         }
+
+        if (companyId.HasValue)
+        {
+            query = query.Where(t =>
+                _context.Users.Any(u =>
+                    u.Id == t.ReporterId &&
+                    u.CompanyId == companyId.Value));
+        }
+
         var totalItems = await query.CountAsync(cancellationToken);
 
         var items = await query

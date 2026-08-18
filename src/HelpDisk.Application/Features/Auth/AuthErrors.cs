@@ -13,6 +13,10 @@ public static class AuthErrors
         "Invalid email or password.");
 
     public static readonly Error UserNotFound = Error.NotFound(
-    "Auth.UserNotFound",
-    "The specified user was not found.");
+        "Auth.UserNotFound",
+        "The specified user was not found.");
+
+    public static readonly Error CompanyNotFound = Error.NotFound(
+        "Auth.CompanyNotFound",
+        "The specified company was not found.");
 }

@@ -60,4 +60,6 @@ public sealed class CurrentUser : ICurrentUser
     public string Role =>
     _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role)
     ?? throw new UnauthorizedAccessException();
+
+    public Guid? CompanyId => throw new NotImplementedException();
 }

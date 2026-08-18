@@ -80,6 +80,7 @@ public interface ITicketRepository
         DateTime? fromDate,
         DateTime? toDate,
         string? reporterId,
+        Guid? companyId,
         string? sortBy,
         bool descending,
         int page,

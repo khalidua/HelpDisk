@@ -30,7 +30,8 @@ public sealed class JwtTokenProvider : ITokenProvider
             new(ClaimTypes.NameIdentifier, userInfo.UserId),
             new(ClaimTypes.Name, $"{userInfo.FirstName} {userInfo.LastName}"),
             new(ClaimTypes.Email, userInfo.Email ?? string.Empty),
-            new(ClaimTypes.Role, userInfo.Role)
+            new(ClaimTypes.Role, userInfo.Role),
+            new(ClaimTypes.GroupSid, userInfo.CompanyId?.ToString() ?? string.Empty)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));

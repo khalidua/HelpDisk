@@ -35,6 +35,7 @@ public class AuthService : IAuthService
             request.Password,
             request.FirstName,
             request.LastName,
+            request.CompanyId,
             cancellationToken);
 
         return result;

@@ -154,22 +154,37 @@ public sealed class TicketService : ITicketService
     }
 
     public async Task<Result<TicketResponse>> GetByIdAsync(
-        Guid ticketId,
-        CancellationToken cancellationToken = default)
+       Guid ticketId,
+       CancellationToken cancellationToken = default)
     {
-        // Comments are wanted here, so use the method that loads them.
         var ticket = await _tickets.GetWithCommentsAsync(ticketId, cancellationToken);
 
         if (ticket is null)
         {
-            // "Not found" is an ordinary outcome, not an exception. It becomes
-            // a 404 in ApiController - but this layer never says "404".
             return TicketErrors.NotFound(ticketId);
         }
 
-        if(_currentUser.Role == "Customer" && ticket.ReporterId != _currentUser.UserId)
+        if (_currentUser.Role == "Customer")
         {
-            return TicketErrors.NotFound(ticketId);
+            if (!_currentUser.CompanyId.HasValue)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
+
+            var reporter = await _identityService.GetUserAsync(
+                ticket.ReporterId,
+                cancellationToken);
+
+            if (reporter.IsFailure)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
+
+            if (ticket.ReporterId != _currentUser.UserId ||
+                reporter.Value.CompanyId != _currentUser.CompanyId)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
         }
 
         return ticket.ToResponse(_currentUser.Role);
@@ -186,10 +201,12 @@ public sealed class TicketService : ITicketService
         }
 
         string? reporterId = null;
+        Guid? companyId = null;
 
         if (_currentUser.Role == "Customer")
         {
             reporterId = _currentUser.UserId;
+            companyId = _currentUser.CompanyId;
         }
 
         var page = await _tickets.SearchAsync(
@@ -201,6 +218,7 @@ public sealed class TicketService : ITicketService
             request.FromDate,
             request.ToDate,
             reporterId,
+            companyId,
             request.SortBy,
             request.Descending,
             request.Page,
@@ -307,15 +325,40 @@ public sealed class TicketService : ITicketService
         return Result.Success();
     }
 
-    public async Task<Result> ReopenAsync(Guid ticketId, CancellationToken cancellationToken = default)
+    public async Task<Result> ReopenAsync(
+       Guid ticketId,
+       CancellationToken cancellationToken = default)
     {
-        var ticket = await _tickets.GetByIdAsync(ticketId, cancellationToken);
+        var ticket = await _tickets.GetByIdAsync(
+            ticketId,
+            cancellationToken);
+
         if (ticket is null)
         {
             return TicketErrors.NotFound(ticketId);
         }
 
-        if(_currentUser.Role != "Customer" || ticket.ReporterId != _currentUser.UserId)
+        if (_currentUser.Role != "Customer")
+        {
+            return TicketErrors.NotFound(ticketId);
+        }
+
+        if (!_currentUser.CompanyId.HasValue)
+        {
+            return TicketErrors.NotFound(ticketId);
+        }
+
+        var reporter = await _identityService.GetUserAsync(
+            ticket.ReporterId,
+            cancellationToken);
+
+        if (reporter.IsFailure)
+        {
+            return TicketErrors.NotFound(ticketId);
+        }
+
+        if (ticket.ReporterId != _currentUser.UserId ||
+            reporter.Value.CompanyId != _currentUser.CompanyId)
         {
             return TicketErrors.NotFound(ticketId);
         }
@@ -343,39 +386,67 @@ public sealed class TicketService : ITicketService
     /// to it, or EF will not track the new child.
     /// </remarks>
     public async Task<Result<Guid>> AddCommentAsync(
-        Guid ticketId,
-        AddCommentRequest request,
-        CancellationToken cancellationToken = default)
+       Guid ticketId,
+       AddCommentRequest request,
+       CancellationToken cancellationToken = default)
     {
-        var validation = await _commentValidator.ValidateAsync(request, cancellationToken);
+        var validation = await _commentValidator.ValidateAsync(
+            request,
+            cancellationToken);
+
         if (!validation.IsValid)
         {
             return ToValidationError(validation);
         }
 
-        var ticket = await _tickets.GetWithCommentsAsync(ticketId, cancellationToken);
+        var ticket = await _tickets.GetWithCommentsAsync(
+            ticketId,
+            cancellationToken);
+
         if (ticket is null)
         {
             return TicketErrors.NotFound(ticketId);
         }
 
-        if(_currentUser.Role == "Customer" && ticket.ReporterId != _currentUser.UserId)
+        if (_currentUser.Role == "Customer")
         {
-            return TicketErrors.NotFound(ticketId);
+            if (!_currentUser.CompanyId.HasValue)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
+
+            var reporter = await _identityService.GetUserAsync(
+                ticket.ReporterId,
+                cancellationToken);
+
+            if (reporter.IsFailure)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
+
+            if (ticket.ReporterId != _currentUser.UserId ||
+                reporter.Value.CompanyId != _currentUser.CompanyId)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
         }
+
         if (_currentUser.Role == "Customer" && request.IsInternal)
         {
             return TicketErrors.InternalCommentNotAllowed;
         }
 
-        var commentResult = ticket.AddComment(request.Body, _currentUser.UserId, request.IsInternal);
+        var commentResult = ticket.AddComment(
+            request.Body,
+            _currentUser.UserId,
+            request.IsInternal);
 
         if (commentResult.IsFailure)
         {
             return commentResult.Error;
         }
 
-        if(_currentUser.Role == "Admin" || _currentUser.Role == "Agent")
+        if (_currentUser.Role == "Admin" || _currentUser.Role == "Agent")
         {
             Result slaResult;
 
@@ -383,7 +454,8 @@ public sealed class TicketService : ITicketService
             {
                 slaResult = ticket.MarkSlaMet();
             }
-            else { 
+            else
+            {
                 slaResult = ticket.MarkSlaBreached();
             }
 
@@ -398,24 +470,49 @@ public sealed class TicketService : ITicketService
         return commentResult.Value.Id;
     }
 
-    public async Task<Result<IReadOnlyList<TicketCommentResponse>>> GetCommentsAsync(Guid ticketId, CancellationToken cancellationToken = default)
+    public async Task<Result<IReadOnlyList<TicketCommentResponse>>> GetCommentsAsync(
+       Guid ticketId,
+       CancellationToken cancellationToken = default)
     {
-        var ticket = await _tickets.GetWithCommentsAsync(ticketId, cancellationToken);
+        var ticket = await _tickets.GetWithCommentsAsync(
+            ticketId,
+            cancellationToken);
 
         if (ticket is null)
-        {
-            return TicketErrors.NotFound(ticketId); 
-        }
-
-        if (_currentUser.Role == "Customer" && ticket.ReporterId != _currentUser.UserId)
         {
             return TicketErrors.NotFound(ticketId);
         }
 
+        if (_currentUser.Role == "Customer")
+        {
+            if (!_currentUser.CompanyId.HasValue)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
+
+            var reporter = await _identityService.GetUserAsync(
+                ticket.ReporterId,
+                cancellationToken);
+
+            if (reporter.IsFailure)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
+
+            if (ticket.ReporterId != _currentUser.UserId ||
+                reporter.Value.CompanyId != _currentUser.CompanyId)
+            {
+                return TicketErrors.NotFound(ticketId);
+            }
+        }
+
         var comments = ticket.Comments
-             .Where(c => _currentUser.Role != "Customer" || !c.IsInternal)
-             .Select(c => c.Adapt<TicketCommentResponse>())
-             .ToList();
+            .Where(c =>
+                _currentUser.Role != "Customer" ||
+                !c.IsInternal)
+            .Select(c => c.Adapt<TicketCommentResponse>())
+            .ToList();
+
         return comments;
     }
     /// <summary>
