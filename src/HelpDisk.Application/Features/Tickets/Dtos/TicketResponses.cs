@@ -39,6 +39,8 @@ public sealed record TicketResponse(
     DateTime CreatedOnUtc,
     DateTime? ModifiedOnUtc,
     DateTime? ClosedOnUtc,
+    DateTime? ResponseDeadlineUtc,
+    TicketSlaStatus SlaStatus,
     IReadOnlyList<TicketCommentResponse> Comments);
 
 public sealed record TicketCommentResponse(
@@ -58,6 +60,8 @@ public sealed record TicketListItemResponse(
     TicketPriority Priority,
     Guid CategoryId,
     string? AssigneeId,
+    DateTime? ResponseDeadlineUtc,
+    TicketSlaStatus SlaStatus,
     DateTime CreatedOnUtc);
 
 /// <summary>

@@ -98,4 +98,12 @@ public static class TicketErrors
     public static readonly Error InternalCommentNotAllowed = Error.Validation(
     "Ticket.InternalCommentNotAllowed",
     "Customers cannot create internal comments.");
+
+    public static readonly Error InvalidResponseDeadline = Error.Validation(
+    "Ticket.InvalidResponseDeadline",
+    "The response deadline must be after the ticket creation time.");
+
+    public static readonly Error SlaAlreadyResolved = Error.Validation(
+    "Ticket.SlaAlreadyResolved",
+    "The ticket SLA has already been resolved.");
 }

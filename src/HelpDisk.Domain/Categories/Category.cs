@@ -71,7 +71,7 @@ public sealed class Category : Entity<Guid>
             return CategoryErrors.NameTooLong;
         }
 
-        if(responseTimeTargetHours < 1)
+        if(responseTimeTargetHours < 0)
         {
             return CategoryErrors.InvalidResponseTimeTarget;
         }
@@ -110,7 +110,7 @@ public sealed class Category : Entity<Guid>
             return CategoryErrors.NameTooLong;
         }
 
-        if (responseTimeTargetHours < 1)
+        if (responseTimeTargetHours < 0)
         {
             return CategoryErrors.InvalidResponseTimeTarget;
         }

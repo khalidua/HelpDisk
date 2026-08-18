@@ -163,4 +163,9 @@ public sealed class TicketRepository : ITicketRepository
     /// Marks a ticket deleted. SoftDeleteInterceptor turns this into an update.
     /// </summary>
     public void Remove(Ticket ticket) => _context.Tickets.Remove(ticket);
+
+    public async Task<IReadOnlyList<Ticket>> GetExpiredSlaTicketsAsync(DateTime nowUtc, CancellationToken cancellationToken = default) =>
+        await _context.Tickets.Where(t => t.SlaStatus == TicketSlaStatus.Pending 
+            && t.ResponseDeadlineUtc.HasValue && t.ResponseDeadlineUtc.Value <= nowUtc)
+            .ToListAsync(cancellationToken);
 }

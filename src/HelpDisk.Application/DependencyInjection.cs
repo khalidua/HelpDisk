@@ -43,6 +43,7 @@ public static class DependencyInjection
         services.AddScoped<ITicketService, TicketService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<TicketSlaService>();
         // ---- Validators ------------------------------------------------------
         // Scans for every AbstractValidator<T> in this assembly, so adding a
         // validator needs no change here. One of the few places where scanning

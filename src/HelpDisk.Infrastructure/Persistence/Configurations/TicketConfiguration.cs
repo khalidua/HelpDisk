@@ -123,5 +123,9 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         // never persisted. Without this, EF sees a collection property it does
         // not recognise and fails to build the model.
         builder.Ignore(t => t.DomainEvents);
+
+        builder.Property(t => t.ResponseDeadlineUtc).IsRequired(false);
+
+        builder.Property(t => t.SlaStatus).HasConversion<int>().IsRequired();
     }
 }

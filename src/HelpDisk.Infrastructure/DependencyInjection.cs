@@ -1,22 +1,24 @@
+using System.Text;
+
 using HelpDisk.Application.Abstractions;
 using HelpDisk.Application.Abstractions.Events;
+using HelpDisk.Application.Features.Tickets;
 using HelpDisk.Domain.Categories;
 using HelpDisk.Domain.Repositories;
 using HelpDisk.Domain.Tickets;
+using HelpDisk.Infrastructure.Identity;
 using HelpDisk.Infrastructure.Persistence;
 using HelpDisk.Infrastructure.Persistence.Interceptors;
 using HelpDisk.Infrastructure.Persistence.Repositories;
 using HelpDisk.Infrastructure.Services;
-using HelpDisk.Infrastructure.Identity;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
-using System.Text;
 
 
 namespace HelpDisk.Infrastructure;
@@ -93,6 +95,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenProvider, JwtTokenProvider>();
 
+        services.AddHostedService<TicketSlaBackgroundService>();
         // NOTE: ICurrentUser is NOT registered here. Its implementation needs
         // IHttpContextAccessor, so it lives in the API layer - see
         // HelpDisk.API/Services/CurrentUser.cs. Infrastructure is not the only

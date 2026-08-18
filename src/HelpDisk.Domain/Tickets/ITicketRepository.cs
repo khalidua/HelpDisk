@@ -104,4 +104,6 @@ public interface ITicketRepository
     /// and does not need to.
     /// </remarks>
     void Remove(Ticket ticket);
+
+    Task<IReadOnlyList<Ticket>> GetExpiredSlaTicketsAsync(DateTime nowUtc,CancellationToken cancellationToken = default);
 }

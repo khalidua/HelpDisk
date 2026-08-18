@@ -13,7 +13,7 @@ public sealed class CreateCategoryRequestValidator : AbstractValidator<CreateCat
             .MaximumLength(Category.NameMaxLength);
 
         RuleFor(x => x.ResponseTimeTargetHours)
-            .GreaterThan(0)
-            .WithMessage("Response time target must be at least 1 hour.");
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Response time target cannot be negative.");
     }
 }

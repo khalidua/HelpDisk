@@ -109,7 +109,9 @@ public sealed class TicketService : ITicketService
         // and an aggregate that reaches for a repository is no longer testable
         // without one. Cross-aggregate existence checks are an orchestration
         // concern, so the orchestrator does them.
-        if (!await _categories.ExistsAsync(request.CategoryId, cancellationToken))
+        var category = await _categories.GetByIdAsync(request.CategoryId, cancellationToken);
+
+        if (category is null)
         {
             return CategoryErrors.NotFound(request.CategoryId);
         }
@@ -130,6 +132,13 @@ public sealed class TicketService : ITicketService
 
         var ticket = ticketResult.Value;
 
+        var resposeDeadlineUtc = DateTime.UtcNow.AddHours(category.ResponseTimeTargetHours);
+
+        var deadlineResult = ticket.SetResponseDeadline(resposeDeadlineUtc);
+        if (deadlineResult.IsFailure)
+        {
+            return deadlineResult.Error;
+        }
         // ---- 4. Persist ----------------------------------------------------
         // AddAsync only starts tracking. SaveChangesAsync is what writes - and
         // is also what stamps CreatedOnUtc and dispatches
@@ -357,9 +366,28 @@ public sealed class TicketService : ITicketService
         }
 
         var commentResult = ticket.AddComment(request.Body, _currentUser.UserId, request.IsInternal);
+
         if (commentResult.IsFailure)
         {
             return commentResult.Error;
+        }
+
+        if(_currentUser.Role == "Admin" || _currentUser.Role == "Agent")
+        {
+            Result slaResult;
+
+            if (DateTime.UtcNow <= ticket.ResponseDeadlineUtc)
+            {
+                slaResult = ticket.MarkSlaMet();
+            }
+            else { 
+                slaResult = ticket.MarkSlaBreached();
+            }
+
+            if (slaResult.IsFailure)
+            {
+                return slaResult.Error;
+            }
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

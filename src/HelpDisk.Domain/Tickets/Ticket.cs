@@ -94,6 +94,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
         CategoryId = categoryId;
         ReporterId = reporterId;
         Status = TicketStatus.New;
+        SlaStatus = TicketSlaStatus.Pending;
     }
     
     public string Title { get; private set; } = null!;
@@ -140,6 +141,9 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
 
     public DateTime? RestoredAtUtc { get; set; }
 
+    public DateTime? ResponseDeadlineUtc { get; private set; }
+
+    public TicketSlaStatus SlaStatus { get; private set; }
     /// <summary>
     /// The ticket's comments, readable but not modifiable from outside.
     /// </summary>
@@ -348,5 +352,39 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
         _comments.Add(comment);
 
         return comment;
+    }
+
+    public Result SetResponseDeadline(DateTime responseDeadlineUtc)
+    {
+        if (responseDeadlineUtc <= CreatedOnUtc)
+        {
+            return TicketErrors.InvalidResponseDeadline;
+        }
+
+        ResponseDeadlineUtc = responseDeadlineUtc;
+
+        return Result.Success();
+    }
+
+    public Result MarkSlaMet()
+    {
+        if(SlaStatus == TicketSlaStatus.Met)
+        {
+            return TicketErrors.SlaAlreadyResolved;
+        }
+        
+        SlaStatus = TicketSlaStatus.Met;
+        return Result.Success();
+    }
+
+    public Result MarkSlaBreached()
+    {
+        if (SlaStatus == TicketSlaStatus.Breached)
+        {
+            return TicketErrors.SlaAlreadyResolved;
+        }
+
+        SlaStatus = TicketSlaStatus.Breached;
+        return Result.Success();
     }
 }
