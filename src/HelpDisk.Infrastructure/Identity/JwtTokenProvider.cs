@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -16,9 +16,12 @@ namespace HelpDisk.Infrastructure.Identity;
 public sealed class JwtTokenProvider : ITokenProvider
 {
     private readonly JwtOptions _options;
-    public JwtTokenProvider(IOptions<JwtOptions> options)
+    private readonly IDateTimeProvider _dateTime;
+
+    public JwtTokenProvider(IOptions<JwtOptions> options, IDateTimeProvider dateTime)
     {
         _options = options.Value;
+        _dateTime = dateTime;
     }
     public Task<Result<TokenResponse>> GenerateTokenAsync(UserInfo userInfo, CancellationToken cancellationToken = default)
     {
@@ -34,7 +37,7 @@ public sealed class JwtTokenProvider : ITokenProvider
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var expiresAt = DateTime.UtcNow.AddMinutes(_options.ExpirationMinutes);
+        var expiresAt = _dateTime.UtcNow.AddMinutes(_options.ExpirationMinutes);
 
         var token = new JwtSecurityToken(
                 issuer: _options.Issuer,

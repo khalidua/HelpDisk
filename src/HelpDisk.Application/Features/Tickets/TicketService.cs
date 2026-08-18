@@ -56,6 +56,7 @@ public sealed class TicketService : ITicketService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IIdentityService _identityService;
     private readonly ICurrentUser _currentUser;
+    private readonly IDateTimeProvider _dateTime;
     private readonly IValidator<CreateTicketRequest> _createValidator;
     private readonly IValidator<UpdateTicketRequest> _updateValidator;
     private readonly IValidator<AssignTicketRequest> _assignValidator;
@@ -69,6 +70,7 @@ public sealed class TicketService : ITicketService
         ICategoryRepository categories,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
+        IDateTimeProvider dateTime,
         IValidator<CreateTicketRequest> createValidator,
         IValidator<UpdateTicketRequest> updateValidator,
         IValidator<AssignTicketRequest> assignValidator,
@@ -80,6 +82,7 @@ public sealed class TicketService : ITicketService
         _categories = categories;
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _dateTime = dateTime;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
         _assignValidator = assignValidator;
@@ -132,7 +135,7 @@ public sealed class TicketService : ITicketService
 
         var ticket = ticketResult.Value;
 
-        var resposeDeadlineUtc = DateTime.UtcNow.AddHours(category.ResponseTimeTargetHours);
+        var resposeDeadlineUtc = _dateTime.UtcNow.AddHours(category.ResponseTimeTargetHours);
 
         var deadlineResult = ticket.SetResponseDeadline(resposeDeadlineUtc);
         if (deadlineResult.IsFailure)
@@ -376,7 +379,7 @@ public sealed class TicketService : ITicketService
         {
             Result slaResult;
 
-            if (DateTime.UtcNow <= ticket.ResponseDeadlineUtc)
+            if (_dateTime.UtcNow <= ticket.ResponseDeadlineUtc)
             {
                 slaResult = ticket.MarkSlaMet();
             }

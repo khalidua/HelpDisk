@@ -1,3 +1,4 @@
+using HelpDisk.Domain.Reports;
 using HelpDisk.Domain.Shared;
 
 namespace HelpDisk.Domain.Tickets;
@@ -106,4 +107,13 @@ public interface ITicketRepository
     void Remove(Ticket ticket);
 
     Task<IReadOnlyList<Ticket>> GetExpiredSlaTicketsAsync(DateTime nowUtc,CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<OpenTicketsPerAgent>> GetOpenTicketsPerAgentAsync(CancellationToken cancellationToken = default);
+    
+    Task<IReadOnlyList<AverageResolutionTimePerCategory>> GetAverageResolutionTimePerCategoryAsync(CancellationToken cancellationToken = default);
+
+    Task<SlaBreachesThisMonth> GetSlaBreachesThisMonthAsync(
+        DateTime monthStartUtc,
+        DateTime nextMonthStartUtc,
+        CancellationToken cancellationToken = default);
 }

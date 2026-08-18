@@ -1,3 +1,4 @@
+using HelpDisk.Domain.Reports;
 using HelpDisk.Domain.Shared;
 using HelpDisk.Domain.Tickets;
 using Microsoft.EntityFrameworkCore;
@@ -168,4 +169,43 @@ public sealed class TicketRepository : ITicketRepository
         await _context.Tickets.Where(t => t.SlaStatus == TicketSlaStatus.Pending 
             && t.ResponseDeadlineUtc.HasValue && t.ResponseDeadlineUtc.Value <= nowUtc)
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<OpenTicketsPerAgent>> GetOpenTicketsPerAgentAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Tickets
+            .Where(t=> t.Status == TicketStatus.InProgress && t.AssigneeId != null)
+            .GroupBy(t => t.AssigneeId)
+            .Select(group => new OpenTicketsPerAgent(group.Key, group.Count()))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<AverageResolutionTimePerCategory>> GetAverageResolutionTimePerCategoryAsync( CancellationToken cancellationToken = default)
+    {
+        return await _context.Tickets
+            .Where(t =>
+                t.Status == TicketStatus.Closed &&
+                t.ClosedOnUtc.HasValue)
+            .GroupBy(t => t.CategoryId)
+            .Select(group => new AverageResolutionTimePerCategory(
+                group.Key,
+                group.Average(t =>
+                    EF.Functions.DateDiffMinute(t.CreatedOnUtc,t.ClosedOnUtc.Value) / 60.0)))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<SlaBreachesThisMonth> GetSlaBreachesThisMonthAsync(
+        DateTime monthStartUtc,
+        DateTime nextMonthStartUtc,
+        CancellationToken cancellationToken = default)
+    {
+        var breachCount = await _context.Tickets
+            .Where(t =>
+                t.SlaStatus == TicketSlaStatus.Breached &&
+                t.ResponseDeadlineUtc.HasValue &&
+                t.ResponseDeadlineUtc.Value >= monthStartUtc &&
+                t.ResponseDeadlineUtc.Value < nextMonthStartUtc)
+            .CountAsync(cancellationToken);
+
+        return new SlaBreachesThisMonth(breachCount);
+    }
 }
