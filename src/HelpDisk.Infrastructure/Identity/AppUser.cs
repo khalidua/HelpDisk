@@ -9,4 +9,5 @@ public sealed class AppUser : IdentityUser
 
     public Guid? CompanyId { get; set; }
 
+    public bool IsActive { get; set; } = true;
 }
