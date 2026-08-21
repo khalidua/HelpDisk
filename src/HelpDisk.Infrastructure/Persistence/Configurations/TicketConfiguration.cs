@@ -104,6 +104,19 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         // ---------------------------------------------------------------------
+        // THE ATTACHMENTS COLLECTION
+        // ---------------------------------------------------------------------
+
+        builder.HasMany(t => t.Attachments)
+            .WithOne()
+            .HasForeignKey(a => a.TicketId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Metadata
+            .FindNavigation(nameof(Ticket.Attachments))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        // ---------------------------------------------------------------------
         // SOFT DELETE - the global query filter
         // ---------------------------------------------------------------------
         // Appends "WHERE IsDeleted = 0" to every query against Tickets,

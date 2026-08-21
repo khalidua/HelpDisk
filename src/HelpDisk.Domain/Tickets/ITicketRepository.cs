@@ -68,7 +68,18 @@ public interface ITicketRepository
     /// ticket to flip one enum is how endpoints get slow. Naming the two cases
     /// makes the cost visible at the call site.
     /// </remarks>
-    Task<Ticket?> GetWithCommentsAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<Ticket?> GetWithCommentsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task<Ticket?> GetWithAttachmentsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task<Ticket?> GetWithCommentsAndAttachmentsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
 
     /// <summary>Searches tickets, newest first, one page at a time.</summary>
     Task<Pagination<Ticket>> SearchAsync(
@@ -117,4 +128,6 @@ public interface ITicketRepository
         DateTime monthStartUtc,
         DateTime nextMonthStartUtc,
         CancellationToken cancellationToken = default);
+
+
 }

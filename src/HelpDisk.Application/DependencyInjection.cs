@@ -4,6 +4,7 @@ using FluentValidation;
 
 using HelpDisk.Application.Abstractions.Events;
 using HelpDisk.Application.Features.Agents;
+using HelpDisk.Application.Features.Attachments;
 using HelpDisk.Application.Features.Auth;
 using HelpDisk.Application.Features.Categories;
 using HelpDisk.Application.Features.Reports;
@@ -47,6 +48,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IAgentService, AgentService>();
+        services.AddScoped<IAttachmentService, AttachmentService>();
         services.AddScoped<TicketSlaService>();
         // ---- Validators ------------------------------------------------------
         // Scans for every AbstractValidator<T> in this assembly, so adding a

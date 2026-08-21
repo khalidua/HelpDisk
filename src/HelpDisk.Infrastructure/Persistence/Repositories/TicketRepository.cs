@@ -42,13 +42,35 @@ public sealed class TicketRepository : ITicketRepository
         await _context.Tickets
             .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
 
-    public async Task<Ticket?> GetWithCommentsAsync(Guid id, CancellationToken cancellationToken = default) =>
-        await _context.Tickets
-            // Include works against the Comments navigation because
-            // TicketConfiguration told EF to reach the private _comments field.
+    public async Task<Ticket?> GetWithCommentsAsync(
+    Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        return await _context.Tickets
             .Include(t => t.Comments)
             .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+    }
 
+    public async Task<Ticket?> GetWithAttachmentsAsync(
+    Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        return await _context.Tickets
+            .Include(t => t.Attachments)
+            .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+    }
+
+    public async Task<Ticket?> GetWithCommentsAndAttachmentsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Tickets
+            .Include(t => t.Comments)
+            .Include(t => t.Attachments)
+            .FirstOrDefaultAsync(
+                t => t.Id == id,
+                cancellationToken);
+    }
     /// <summary>
     /// Paged, filtered search. NOT tracked.
     /// </summary>

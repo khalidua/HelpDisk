@@ -45,13 +45,21 @@ public sealed class TicketMappingConfig : IRegister
     {
         config.NewConfig<TicketComment, TicketCommentResponse>();
 
+        config.NewConfig<TicketAttachment, TicketAttachmentResponse>();
+
         config.NewConfig<Ticket, TicketListItemResponse>();
 
         config.NewConfig<Ticket, TicketResponse>()
-            // Comments is IReadOnlyCollection on the entity and IReadOnlyList on
-            // the DTO, so the projection is spelled out rather than guessed.
-            .Map(dest => dest.Comments,
-                 src => src.Comments.Select(c => c.Adapt<TicketCommentResponse>()).ToList());
+            .Map(
+                dest => dest.Comments,
+                src => src.Comments
+                    .Select(c => c.Adapt<TicketCommentResponse>())
+                    .ToList())
+            .Map(
+                dest => dest.Attachments,
+                src => src.Attachments
+                    .Select(a => a.Adapt<TicketAttachmentResponse>())
+                    .ToList());
     }
 }
 

@@ -99,6 +99,46 @@ public static class TicketErrors
     "Ticket.InternalCommentNotAllowed",
     "Customers cannot create internal comments.");
 
+    public static readonly Error CannotAddAttachmentToClosedTicket =
+    Error.Conflict(
+        "Tickets.CannotAddAttachmentToClosedTicket",
+        "Attachments cannot be added to a closed ticket.");
+
+    public static readonly Error MaximumAttachmentsReached =
+        Error.Conflict(
+            "Tickets.MaximumAttachmentsReached",
+            "A ticket cannot have more than 5 attachments.");
+
+    public static readonly Error AttachmentFileNameRequired =
+        Error.Validation(
+            "Tickets.AttachmentFileNameRequired",
+            "The attachment file name is required.");
+
+    public static readonly Error AttachmentContentTypeRequired =
+        Error.Validation(
+            "Tickets.AttachmentContentTypeRequired",
+            "The attachment content type is required.");
+
+    public static readonly Error AttachmentFileSizeInvalid =
+        Error.Validation(
+            "Tickets.AttachmentFileSizeInvalid",
+            "The attachment file size must be greater than zero.");
+
+    public static readonly Error AttachmentStorageKeyRequired =
+        Error.Validation(
+            "Tickets.AttachmentStorageKeyRequired",
+            "The attachment storage key is required.");
+
+    public static readonly Error AttachmentUploaderRequired =
+        Error.Validation(
+            "Tickets.AttachmentUploaderRequired",
+            "The attachment uploader is required.");
+
+    public static readonly Error AttachmentNotFound =
+        Error.NotFound(
+            "Tickets.AttachmentNotFound",
+            "The specified attachment was not found.");
+
     public static readonly Error InvalidResponseDeadline = Error.Validation(
     "Ticket.InvalidResponseDeadline",
     "The response deadline must be after the ticket creation time.");
@@ -106,4 +146,6 @@ public static class TicketErrors
     public static readonly Error SlaAlreadyResolved = Error.Validation(
     "Ticket.SlaAlreadyResolved",
     "The ticket SLA has already been resolved.");
+
+
 }

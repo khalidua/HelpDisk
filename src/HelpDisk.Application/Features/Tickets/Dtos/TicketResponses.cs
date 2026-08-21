@@ -41,7 +41,8 @@ public sealed record TicketResponse(
     DateTime? ClosedOnUtc,
     DateTime? ResponseDeadlineUtc,
     TicketSlaStatus SlaStatus,
-    IReadOnlyList<TicketCommentResponse> Comments);
+    IReadOnlyList<TicketCommentResponse> Comments,
+    IReadOnlyList<TicketAttachmentResponse> Attachments);
 
 public sealed record TicketCommentResponse(
     Guid Id,
@@ -76,3 +77,12 @@ public sealed record PagedResponse<T>(
     int TotalItems,
     bool HasPreviousPage,
     bool HasNextPage);
+
+
+public sealed record TicketAttachmentResponse(
+    Guid Id,
+    string FileName,
+    string ContentType,
+    long FileSize,
+    string UploadedById,
+    DateTime CreatedOnUtc);

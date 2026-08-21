@@ -157,7 +157,7 @@ public sealed class TicketService : ITicketService
        Guid ticketId,
        CancellationToken cancellationToken = default)
     {
-        var ticket = await _tickets.GetWithCommentsAsync(ticketId, cancellationToken);
+        var ticket = await _tickets.GetWithCommentsAndAttachmentsAsync(ticketId, cancellationToken);
 
         if (ticket is null)
         {

@@ -94,6 +94,7 @@ public static class DependencyInjection
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenProvider, JwtTokenProvider>();
+        services.AddScoped<IFileStorage, LocalFileStorage>();
 
         services.AddHostedService<TicketSlaBackgroundService>();
         // NOTE: ICurrentUser is NOT registered here. Its implementation needs

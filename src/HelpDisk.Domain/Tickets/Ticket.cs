@@ -73,6 +73,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
     /// error, the list is simply always empty.
     /// </remarks>
     private readonly List<TicketComment> _comments = [];
+    private readonly List<TicketAttachment> _attachments = [];
 
     /// <summary>Required by EF Core. Not usable by application code.</summary>
     private Ticket()
@@ -148,6 +149,8 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
     /// The ticket's comments, readable but not modifiable from outside.
     /// </summary>
     public IReadOnlyCollection<TicketComment> Comments => _comments.AsReadOnly();
+
+    public IReadOnlyCollection<TicketAttachment> Attachments => _attachments.AsReadOnly();
 
     /// <summary>
     /// The only way to create a ticket.
@@ -352,6 +355,77 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
         _comments.Add(comment);
 
         return comment;
+    }
+
+    public Result<TicketAttachment> AddAttachment(
+    string fileName,
+    string contentType,
+    long fileSize,
+    string storageKey,
+    string uploadedById)
+    {
+        if (Status == TicketStatus.Closed)
+        {
+            return TicketErrors.CannotAddAttachmentToClosedTicket;
+        }
+
+        if (_attachments.Count >= 5)
+        {
+            return TicketErrors.MaximumAttachmentsReached;
+        }
+
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return TicketErrors.AttachmentFileNameRequired;
+        }
+
+        if (string.IsNullOrWhiteSpace(contentType))
+        {
+            return TicketErrors.AttachmentContentTypeRequired;
+        }
+
+        if (fileSize <= 0)
+        {
+            return TicketErrors.AttachmentFileSizeInvalid;
+        }
+
+        if (string.IsNullOrWhiteSpace(storageKey))
+        {
+            return TicketErrors.AttachmentStorageKeyRequired;
+        }
+
+        if (string.IsNullOrWhiteSpace(uploadedById))
+        {
+            return TicketErrors.AttachmentUploaderRequired;
+        }
+
+        var attachment = new TicketAttachment(
+            Guid.NewGuid(),
+            Id,
+            fileName.Trim(),
+            contentType.Trim(),
+            fileSize,
+            storageKey.Trim(),
+            uploadedById);
+
+        _attachments.Add(attachment);
+
+        return attachment;
+    }
+
+    public Result RemoveAttachment(Guid attachmentId)
+    {
+        var attachment = _attachments
+            .FirstOrDefault(x => x.Id == attachmentId);
+
+        if (attachment is null)
+        {
+            return TicketErrors.AttachmentNotFound;
+        }
+
+        _attachments.Remove(attachment);
+
+        return Result.Success();
     }
 
     public Result SetResponseDeadline(DateTime responseDeadlineUtc)
