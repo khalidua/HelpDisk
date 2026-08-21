@@ -29,6 +29,7 @@ namespace HelpDisk.Application.Features.Tickets.Dtos;
 /// <summary>Full detail for a single ticket, including its comments.</summary>
 public sealed record TicketResponse(
     Guid Id,
+    string TicketNumber,
     string Title,
     string Description,
     TicketStatus Status,
@@ -56,6 +57,7 @@ public sealed record TicketCommentResponse(
 /// </summary>
 public sealed record TicketListItemResponse(
     Guid Id,
+    string TicketNumber,
     string Title,
     TicketStatus Status,
     TicketPriority Priority,

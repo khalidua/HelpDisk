@@ -137,8 +137,19 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         // not recognise and fails to build the model.
         builder.Ignore(t => t.DomainEvents);
 
-        builder.Property(t => t.ResponseDeadlineUtc).IsRequired(false);
+        builder.Property(t => t.ResponseDeadlineUtc)
+            .IsRequired(false);
 
-        builder.Property(t => t.SlaStatus).HasConversion<int>().IsRequired();
+        builder.Property(t => t.SlaStatus)
+            .HasConversion<int>()
+            .IsRequired();
+
+        builder.Property(t => t.TicketNumber)
+            .IsRequired()
+            .HasMaxLength(Ticket.TicketNumberMaxLength);
+
+        builder.HasIndex(t => t.TicketNumber)
+            .IsUnique();
+
     }
 }

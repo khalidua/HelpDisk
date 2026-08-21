@@ -57,6 +57,7 @@ public sealed class TicketService : ITicketService
     private readonly IIdentityService _identityService;
     private readonly ICurrentUser _currentUser;
     private readonly IDateTimeProvider _dateTime;
+    private readonly ITicketNumberGenerator _ticketNumberGenerator;
     private readonly IValidator<CreateTicketRequest> _createValidator;
     private readonly IValidator<UpdateTicketRequest> _updateValidator;
     private readonly IValidator<AssignTicketRequest> _assignValidator;
@@ -71,6 +72,7 @@ public sealed class TicketService : ITicketService
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         IDateTimeProvider dateTime,
+        ITicketNumberGenerator ticketNumberGenerator,
         IValidator<CreateTicketRequest> createValidator,
         IValidator<UpdateTicketRequest> updateValidator,
         IValidator<AssignTicketRequest> assignValidator,
@@ -83,6 +85,7 @@ public sealed class TicketService : ITicketService
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _dateTime = dateTime;
+        _ticketNumberGenerator = ticketNumberGenerator;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
         _assignValidator = assignValidator;
@@ -122,6 +125,7 @@ public sealed class TicketService : ITicketService
         // ---- 3. Let the domain build it ------------------------------------
         // Note ICurrentUser supplying the reporter. The client never sends it.
         var ticketResult = Ticket.Create(
+            await _ticketNumberGenerator.GenerateAsync(cancellationToken),
             request.Title,
             request.Description,
             request.Priority,

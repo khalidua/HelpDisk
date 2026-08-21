@@ -140,6 +140,7 @@ public sealed class TicketsController : ApiController
 
     /// <summary>Reopens a closed ticket.</summary>
     [HttpPut("{ticketId:guid}/reopen")]
+    [Authorize(Roles = "Customer")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]

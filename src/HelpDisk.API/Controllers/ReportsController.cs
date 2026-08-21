@@ -1,4 +1,4 @@
-﻿using HelpDisk.API.Abstractions;
+using HelpDisk.API.Abstractions;
 using HelpDisk.Application.Features.Reports;
 using HelpDisk.Application.Features.Tickets;
 

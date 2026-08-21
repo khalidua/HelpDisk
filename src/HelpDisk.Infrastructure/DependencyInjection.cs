@@ -86,6 +86,7 @@ public static class DependencyInjection
         // ---- Repositories and unit of work -----------------------------------
         services.AddScoped<ITicketRepository, TicketRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // ---- Services --------------------------------------------------------
@@ -95,6 +96,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenProvider, JwtTokenProvider>();
         services.AddScoped<IFileStorage, LocalFileStorage>();
+        services.AddScoped<ITicketNumberGenerator, TicketNumberGenerator>();
 
         services.AddHostedService<TicketSlaBackgroundService>();
         // NOTE: ICurrentUser is NOT registered here. Its implementation needs

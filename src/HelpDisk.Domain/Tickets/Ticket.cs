@@ -58,6 +58,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
 {
     public const int TitleMaxLength = 200;
     public const int DescriptionMaxLength = 4_000;
+    public const int TicketNumberMaxLength = 20;
 
     /// <summary>
     /// Backing field for <see cref="Comments"/>.
@@ -82,6 +83,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
 
     private Ticket(
         Guid id,
+        string ticketNumber,
         string title,
         string description,
         TicketPriority priority,
@@ -90,6 +92,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
         : base(id)
     {
         Title = title;
+        TicketNumber = ticketNumber;
         Description = description;
         Priority = priority;
         CategoryId = categoryId;
@@ -105,6 +108,8 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
     public TicketStatus Status { get; private set; }
 
     public TicketPriority Priority { get; private set; }
+
+    public string TicketNumber { get; private set; } = null!;
 
     /// <summary>
     /// The category this ticket belongs to, referenced BY ID.
@@ -170,12 +175,23 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
     /// always.
     /// </remarks>
     public static Result<Ticket> Create(
+        string ticketNumber,
         string title,
         string description,
         TicketPriority priority,
         Guid categoryId,
         string reporterId)
     {
+
+        if (string.IsNullOrWhiteSpace(ticketNumber))
+        {
+            return TicketErrors.TicketNumberRequired;
+        }
+
+        if (ticketNumber.Length > Ticket.TicketNumberMaxLength)
+        {
+            return TicketErrors.TicketNumberTooLong;
+        }
         if (string.IsNullOrWhiteSpace(title))
         {
             return TicketErrors.TitleRequired;
@@ -208,6 +224,7 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
 
         var ticket = new Ticket(
             Guid.NewGuid(),
+            ticketNumber,
             title.Trim(),
             description.Trim(),
             priority,

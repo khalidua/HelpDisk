@@ -147,5 +147,12 @@ public static class TicketErrors
     "Ticket.SlaAlreadyResolved",
     "The ticket SLA has already been resolved.");
 
+    public static readonly Error TicketNumberRequired = Error.Validation(
+    "Ticket.TicketNumberRequired",
+    "A ticket number is required.");
+
+    public static readonly Error TicketNumberTooLong = Error.Validation(
+        "Ticket.TicketNumberTooLong",
+        $"A ticket number cannot exceed {Ticket.TicketNumberMaxLength} characters.");
 
 }

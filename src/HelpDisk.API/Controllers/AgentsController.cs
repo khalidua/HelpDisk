@@ -1,4 +1,4 @@
-﻿using HelpDisk.API.Abstractions;
+using HelpDisk.API.Abstractions;
 using HelpDisk.Application.Features.Agents;
 using HelpDisk.Application.Features.Agents.Dtos;
 
