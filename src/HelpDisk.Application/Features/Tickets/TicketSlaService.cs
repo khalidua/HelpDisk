@@ -30,7 +30,6 @@ public sealed class TicketSlaService
         foreach (var ticket in tickets)
         {
             var result = ticket.MarkSlaBreached();
-            ticket.MarkSlaBreached();
 
             if (result.IsFailure)
             {

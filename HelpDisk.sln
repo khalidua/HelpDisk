@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -11,6 +12,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDisk.Infrastructure", "src\HelpDisk.Infrastructure\HelpDisk.Infrastructure.csproj", "{65983B0C-D522-48C6-B4CA-A2EFEBB93EE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDisk.API", "src\HelpDisk.API\HelpDisk.API.csproj", "{CFB4AC2B-033E-49EF-A2A4-39576F991F1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDisk.Domain.Tests", "tests\HelpDisk.Domain.Tests\HelpDisk.Domain.Tests.csproj", "{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDisk.Application.Tests", "tests\HelpDisk.Application.Tests\HelpDisk.Application.Tests.csproj", "{4C133EA9-63C1-4004-B153-315B7E772C31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +77,30 @@ Global
 		{CFB4AC2B-033E-49EF-A2A4-39576F991F1D}.Release|x64.Build.0 = Release|Any CPU
 		{CFB4AC2B-033E-49EF-A2A4-39576F991F1D}.Release|x86.ActiveCfg = Release|Any CPU
 		{CFB4AC2B-033E-49EF-A2A4-39576F991F1D}.Release|x86.Build.0 = Release|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Release|x64.Build.0 = Release|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1}.Release|x86.Build.0 = Release|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Debug|x64.Build.0 = Debug|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Debug|x86.Build.0 = Debug|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Release|x64.ActiveCfg = Release|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Release|x64.Build.0 = Release|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Release|x86.ActiveCfg = Release|Any CPU
+		{4C133EA9-63C1-4004-B153-315B7E772C31}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,5 +110,7 @@ Global
 		{0D74E0AC-E746-45C9-9754-44DC11245FD1} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{65983B0C-D522-48C6-B4CA-A2EFEBB93EE8} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{CFB4AC2B-033E-49EF-A2A4-39576F991F1D} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{D663F167-D136-4F2A-9AFB-4CDFA8AB79B1} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{4C133EA9-63C1-4004-B153-315B7E772C31} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

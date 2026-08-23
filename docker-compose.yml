@@ -1,0 +1,22 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Khalid#123456"
+    ports:
+      - "1433:1433"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Database: "Server=sqlserver;Database=HelpDisk;User Id=sa;Password=Khalid#123456;TrustServerCertificate=True"
+
+    depends_on:
+      - sqlserver
+    ports:
+      - "8081:8080" 

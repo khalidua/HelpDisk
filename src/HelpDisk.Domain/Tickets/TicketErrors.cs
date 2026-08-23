@@ -155,4 +155,7 @@ public static class TicketErrors
         "Ticket.TicketNumberTooLong",
         $"A ticket number cannot exceed {Ticket.TicketNumberMaxLength} characters.");
 
+    public static readonly Error ConcurrencyConflict = Error.Conflict(
+    "Ticket.ConcurrencyConflict",
+    "The ticket was modified by another user. Please refresh and try again.");
 }

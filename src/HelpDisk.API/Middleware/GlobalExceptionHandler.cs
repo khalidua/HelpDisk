@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelpDisk.API.Middleware;
 
@@ -51,6 +52,35 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         // exception preserves the stack trace and any inner exceptions; logging
         // only the message throws away everything you would actually need at
         // 3am.
+        if (exception is DbUpdateConcurrencyException)
+        {
+            _logger.LogWarning(
+                exception,
+                "Concurrency conflict for {Method} {Path}",
+                httpContext.Request.Method,
+                httpContext.Request.Path);
+
+            var concurrencyProblemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status409Conflict,
+                Title = "Ticket.ConcurrencyConflict",
+                Detail = "The ticket was modified by another user. Please refresh and try again.",
+                Instance = httpContext.Request.Path
+            };
+
+            concurrencyProblemDetails.Extensions["traceId"] =
+                httpContext.TraceIdentifier;
+
+            httpContext.Response.StatusCode =
+                StatusCodes.Status409Conflict;
+
+            await httpContext.Response.WriteAsJsonAsync(
+                concurrencyProblemDetails,
+                cancellationToken);
+
+            return true;
+        }
+
         _logger.LogError(
             exception,
             "Unhandled exception for {Method} {Path}",

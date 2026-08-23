@@ -150,6 +150,8 @@ public sealed class Ticket : AggregateRoot<Guid>, ISoftDeleteEntity
     public DateTime? ResponseDeadlineUtc { get; private set; }
 
     public TicketSlaStatus SlaStatus { get; private set; }
+
+    public byte[] RowVersion { get; private set; } = [];
     /// <summary>
     /// The ticket's comments, readable but not modifiable from outside.
     /// </summary>

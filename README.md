@@ -1,8 +1,8 @@
 # HelpDisk
 
-A small, complete, runnable .NET solution built to **teach Clean Architecture and DDD**.
+A complete, runnable .NET solution built to **teach Clean Architecture and DDD**.
 
-It is not a product. It implements one feature (support tickets) far enough to exercise every pattern, plus a deliberately tiny second feature (categories) so you can see the pattern repeat rather than infer it from a single example.
+It implements a support-ticket system far enough to exercise every pattern across multiple features (tickets, categories, agents, attachments, reports, authentication) so you can see the same pattern repeat rather than infer it from a single example.
 
 Every file carries comments explaining *why* it is shaped the way it is. Read the code, not just this page.
 
@@ -38,7 +38,7 @@ Every file carries comments explaining *why* it is shaped the way it is. Read th
 |---|---|---|
 | `HelpDisk.Domain` | **nothing** | business rules, and nothing else |
 | `HelpDisk.Application` | Domain | use cases, DTOs, validation |
-| `HelpDisk.Infrastructure` | Application | EF Core, SQL Server |
+| `HelpDisk.Infrastructure` | Application | EF Core, SQL Server, JWT |
 | `HelpDisk.API` | Application, Infrastructure | HTTP, JSON, status codes |
 
 Note the two arrows into Application. **Infrastructure depends on Application, not the other way round.** Application declares interfaces (`ITicketRepository` lives in Domain, `ICurrentUser` in Application) and Infrastructure implements them. That inversion is the whole trick — see `docs/architecture.md`.
@@ -47,44 +47,116 @@ Note the two arrows into Application. **Infrastructure depends on Application, n
 
 ## Running it
 
-**Prerequisites**
+### Prerequisites
 
-- .NET SDK 10.0 or later — `dotnet --version`
-- SQL Server LocalDB (ships with Visual Studio; also available standalone)
-- `dotnet-ef` tools — `dotnet tool install --global dotnet-ef`
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) — required for Option A (recommended)
+- [.NET SDK 10.0](https://dotnet.microsoft.com/download) or later — only required for Option B (`dotnet --version`)
+- `dotnet-ef` tools — only required if you want to manage EF Core migrations manually (`dotnet tool install --global dotnet-ef`)
 
-**Run**
+### Option A — Docker Compose (recommended, cross-platform)
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/cloud4rain-c4r/HelpDisk
+cd HelpDisk
+
+# 2. Start everything (SQL Server + API)
+docker compose up --build
+```
+
+This starts:
+- **SQL Server 2022** on port `1433`
+- **HelpDisk API** on port `8081` → <http://localhost:8081/index.html>
+
+The API container sets `ASPNETCORE_ENVIRONMENT=Development`, so migrations run automatically on startup. No manual database setup required.
+
+### Option B — LocalDB (Windows / Visual Studio)
+
+```bash
+# 1. Clone and restore
+git clone https://github.com/cloud4rain-c4r/HelpDisk
+cd HelpDisk
+
+# 2. Run the API (migrations are applied automatically on first start)
 dotnet run --project src/HelpDisk.API
 ```
 
 Then open **<https://localhost:7132>** — Swagger UI is served at the root.
 
-On startup in Development the app applies any pending migrations, creating the `HelpDisk` database if it does not exist. You do not need to run any database commands first.
+On startup in Development the app applies any pending migrations, creating the `HelpDisk` database automatically. You do not need to run any database commands first.
 
-**Not on Windows / no LocalDB?** Run SQL Server in Docker:
+---
 
-```bash
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Your_password123" \
-  -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+## Try it in this order
+
+The API is protected with JWT. Authenticate first, then use the token for all subsequent requests.
+
+**1. Register a user**
+
+```http
+POST /api/auth/register
+{ "email": "user@example.com", "password": "Password123!" }
 ```
 
-and change `ConnectionStrings:Database` in `src/HelpDisk.API/appsettings.json` to:
+**2. Log in and copy the token**
 
+```http
+POST /api/auth/login
+{ "email": "user@example.com", "password": "Password123!" }
 ```
-Server=localhost,1433;Database=HelpDisk;User Id=sa;Password=Your_password123;TrustServerCertificate=True
+
+Click **Authorize** in Swagger UI and paste the returned token.
+
+**3. Create a category**
+
+```http
+POST /api/categories
+{ "name": "Hardware" }
+```
+Copy the returned `id`.
+
+**4. Create a ticket** (uses the category id from step 3)
+
+```http
+POST /api/tickets
+{
+  "title": "Printer jammed",
+  "description": "3rd floor",
+  "priority": "High",
+  "categoryId": "<the id>"
+}
 ```
 
-**Try it in this order** — a ticket needs a category to exist first:
+**5. Register an agent**
 
-1. `POST /api/categories` → `{ "name": "Hardware" }` — copy the returned id
-2. `POST /api/tickets` → `{ "title": "Printer jammed", "description": "3rd floor", "priority": "High", "categoryId": "<the id>" }`
-3. `PUT /api/tickets/{id}/assign` → `{ "assigneeId": "agent-7" }` — watch the console for the domain event
-4. `PUT /api/tickets/{id}/close`
-5. `PUT /api/tickets/{id}/assign` again → **409**, because a closed ticket cannot be assigned
+```http
+POST /api/agents
+{ "name": "Jane Smith", "email": "jane@example.com" }
+```
+Copy the agent `id`.
 
-Step 5 is the one to dwell on. That refusal comes from `Ticket.Assign` in the Domain project — a class that has never heard of HTTP, EF Core, or the number 409.
+**6. Assign the ticket**
+
+```http
+PUT /api/tickets/{id}/assign
+{ "assigneeId": "<agent id>" }
+```
+Watch the console for the domain event being dispatched.
+
+**7. Close the ticket**
+
+```http
+PUT /api/tickets/{id}/close
+```
+
+**8. Try to assign the closed ticket** — expect **409 Conflict**
+
+```http
+PUT /api/tickets/{id}/assign
+{ "assigneeId": "<agent id>" }
+```
+
+Step 8 is the one to dwell on. That refusal comes from `Ticket.Assign` in the Domain project — a class that has never heard of HTTP, EF Core, or the number 409.
 
 ---
 
@@ -139,9 +211,22 @@ Then open **`docs/adding-a-feature.md`** and add a feature yourself.
 
 ---
 
-## Testing the domain (there is no test project — on purpose)
+## Running the tests
 
-This solution has exactly four projects, as specified. But the payoff of a rich domain model is testability, so here is what those tests look like:
+The solution includes two test projects:
+
+```bash
+# Run all tests
+dotnet test
+
+# Run only domain tests
+dotnet test tests/HelpDisk.Domain.Tests
+
+# Run only application-layer tests
+dotnet test tests/HelpDisk.Application.Tests
+```
+
+**`HelpDisk.Domain.Tests`** — pure unit tests with no mocks, no in-memory database, no `WebApplicationFactory`. Microseconds to run. Possible only because `Ticket` depends on nothing:
 
 ```csharp
 [Fact]
@@ -158,17 +243,30 @@ public void Assign_OnClosedTicket_Fails()
 }
 ```
 
-No mocks. No in-memory database. No `WebApplicationFactory`. No fixture. Microseconds to run.
+No mocks. No in-memory database. No fixture.
 
-That is possible only because `Ticket` depends on nothing. The moment a domain class needs a repository or a `DbContext`, this test needs a mocking framework and a setup block, and people stop writing it.
+**`HelpDisk.Application.Tests`** — service-layer tests that mock repositories with Moq and verify orchestration logic in `TicketService`.
 
-To add tests: `dotnet new xunit -o tests/HelpDisk.Domain.Tests`, reference `HelpDisk.Domain`, and note that the test project needs **no other reference at all**.
+---
+
+## What this solution contains
+
+| Feature | Endpoints |
+|---|---|
+| Authentication | `POST /api/auth/register`, `POST /api/auth/login` |
+| Tickets | Full CRUD + assign, close, reopen, add comment, SLA status |
+| Categories | `GET`, `POST`, `DELETE /api/categories` |
+| Agents | `GET`, `POST`, `DELETE /api/agents` |
+| Attachments | `POST /api/tickets/{id}/attachments`, `DELETE` |
+| Reports | `GET /api/reports/summary` |
+
+All ticket endpoints require a valid JWT Bearer token. Pass the token returned by `/api/auth/login` in the `Authorization: Bearer <token>` header, or use the **Authorize** button in Swagger UI.
 
 ---
 
 ## What this template deliberately leaves out
 
-No CQRS/MediatR, no authentication, no CI pipelines, no logging framework, no localization, no API versioning, no caching, no background jobs, no message bus.
+No CQRS/MediatR, no CI pipelines, no logging framework, no localization, no API versioning, no caching, no background jobs, no message bus.
 
 Every one of those is a real concern in a real system. They are absent because each would add machinery that obscures the thing being taught. `docs/architecture.md` explains what adding each one would involve and — more usefully — which layers would have to change.
 

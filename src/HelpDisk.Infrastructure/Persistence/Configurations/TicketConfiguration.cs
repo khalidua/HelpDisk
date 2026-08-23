@@ -151,5 +151,7 @@ public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         builder.HasIndex(t => t.TicketNumber)
             .IsUnique();
 
+
+        builder.Property(t => t.RowVersion).IsRowVersion().IsConcurrencyToken();
     }
 }

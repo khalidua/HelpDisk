@@ -1,8 +1,9 @@
 using HelpDisk.API.Abstractions;
 using HelpDisk.Application.Features.Tickets;
 using HelpDisk.Application.Features.Tickets.Dtos;
-using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDisk.API.Controllers;
 
@@ -36,14 +37,61 @@ namespace HelpDisk.API.Controllers;
 /// command instead of calling a service. Same thinness, one more hop of
 /// indirection.)
 /// </remarks>
-
 [Authorize]
 [Route("api/tickets")]
 public sealed class TicketsController : ApiController
 {
     private readonly ITicketService _ticketService;
 
-    public TicketsController(ITicketService ticketService) => _ticketService = ticketService;
+    public TicketsController(ITicketService ticketService) =>
+        _ticketService = ticketService;
+
+    // =========================================================================
+    // READ
+    // =========================================================================
+
+    /// <summary>Searches tickets with optional filters and paging.</summary>
+    /// <remarks>
+    /// [FromQuery] on a record binds each property from the query string, so
+    /// GET /api/tickets?status=New&amp;page=2 works with no extra plumbing.
+    /// </remarks>
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResponse<TicketListItemResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Search(
+        [FromQuery] TicketSearchRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _ticketService.SearchAsync(request, cancellationToken);
+        return HandleResult(result);
+    }
+
+    /// <summary>Gets one ticket, including its comments.</summary>
+    [HttpGet("{ticketId:guid}")]
+    [ProducesResponseType(typeof(TicketResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(
+        Guid ticketId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _ticketService.GetByIdAsync(ticketId, cancellationToken);
+        return HandleResult(result);
+    }
+
+    [HttpGet("{ticketId:guid}/comments")]
+    [ProducesResponseType(typeof(IReadOnlyList<TicketCommentResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetComments(
+        Guid ticketId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _ticketService.GetCommentsAsync(ticketId, cancellationToken);
+        return HandleResult(result);
+    }
+
+    // =========================================================================
+    // CREATE
+    // =========================================================================
 
     /// <summary>Creates a ticket.</summary>
     /// <remarks>
@@ -63,36 +111,37 @@ public sealed class TicketsController : ApiController
         return HandleResult(result);
     }
 
-    /// <summary>Gets one ticket, including its comments.</summary>
-    [HttpGet("{ticketId:guid}")]
-    [ProducesResponseType(typeof(TicketResponse), StatusCodes.Status200OK)]
+    /// <summary>Adds a comment to a ticket.</summary>
+    /// <remarks>
+    /// Nested under the ticket because a comment has no independent existence -
+    /// the URL mirrors the aggregate boundary. There is deliberately no
+    /// /api/comments/{id} endpoint.
+    /// </remarks>
+    [HttpPost("{ticketId:guid}/comments")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetById(Guid ticketId, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> AddComment(
+        Guid ticketId,
+        [FromBody] AddCommentRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await _ticketService.GetByIdAsync(ticketId, cancellationToken);
+        var result = await _ticketService.AddCommentAsync(
+            ticketId,
+            request,
+            cancellationToken);
+
         return HandleResult(result);
     }
 
-    /// <summary>Searches tickets with optional filters and paging.</summary>
-    /// <remarks>
-    /// [FromQuery] on a record binds each property from the query string, so
-    /// GET /api/tickets?status=New&amp;page=2 works with no extra plumbing.
-    /// </remarks>
-    [HttpGet]
-    [ProducesResponseType(typeof(PagedResponse<TicketListItemResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Search(
-        [FromQuery] TicketSearchRequest request,
-        CancellationToken cancellationToken)
-    {
-        var result = await _ticketService.SearchAsync(request, cancellationToken);
-        return HandleResult(result);
-    }
+    // =========================================================================
+    // UPDATE / STATE TRANSITIONS
+    // =========================================================================
 
     /// <summary>Updates a ticket's title, description and priority.</summary>
     /// <remarks>Returns 409 if the ticket is closed.</remarks>
     [HttpPut("{ticketId:guid}")]
-    [Authorize(Roles = "Agent,Admin")]  
+    [Authorize(Roles = "Agent,Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -101,7 +150,11 @@ public sealed class TicketsController : ApiController
         [FromBody] UpdateTicketRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await _ticketService.UpdateAsync(ticketId, request, cancellationToken);
+        var result = await _ticketService.UpdateAsync(
+            ticketId,
+            request,
+            cancellationToken);
+
         return HandleResult(result);
     }
 
@@ -122,7 +175,11 @@ public sealed class TicketsController : ApiController
         [FromBody] AssignTicketRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await _ticketService.AssignAsync(ticketId, request, cancellationToken);
+        var result = await _ticketService.AssignAsync(
+            ticketId,
+            request,
+            cancellationToken);
+
         return HandleResult(result);
     }
 
@@ -132,9 +189,14 @@ public sealed class TicketsController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Close(Guid ticketId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Close(
+        Guid ticketId,
+        CancellationToken cancellationToken)
     {
-        var result = await _ticketService.CloseAsync(ticketId, cancellationToken);
+        var result = await _ticketService.CloseAsync(
+            ticketId,
+            cancellationToken);
+
         return HandleResult(result);
     }
 
@@ -144,50 +206,34 @@ public sealed class TicketsController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Reopen(Guid ticketId, CancellationToken cancellationToken)
-    {
-        var result = await _ticketService.ReopenAsync(ticketId, cancellationToken);
-        return HandleResult(result);
-    }
-
-    /// <summary>Adds a comment to a ticket.</summary>
-    /// <remarks>
-    /// Nested under the ticket because a comment has no independent existence -
-    /// the URL mirrors the aggregate boundary. There is deliberately no
-    /// /api/comments/{id} endpoint.
-    /// </remarks>
-    [HttpPost("{ticketId:guid}/comments")]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> AddComment(
+    public async Task<IActionResult> Reopen(
         Guid ticketId,
-        [FromBody] AddCommentRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await _ticketService.AddCommentAsync(ticketId, request, cancellationToken);
+        var result = await _ticketService.ReopenAsync(
+            ticketId,
+            cancellationToken);
+
         return HandleResult(result);
     }
 
-    [HttpGet("{ticketId:guid}/comments")]
-    [ProducesResponseType(typeof(IReadOnlyList<TicketCommentResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetComments(
-    Guid ticketId,
-    CancellationToken cancellationToken)
-    {
-        var result = await _ticketService.GetCommentsAsync(ticketId, cancellationToken);
-        return HandleResult(result);
-    }
+    // =========================================================================
+    // DELETE
+    // =========================================================================
 
     /// <summary>Deletes a ticket (soft delete - the row survives).</summary>
     [HttpDelete("{ticketId:guid}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(Guid ticketId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(
+        Guid ticketId,
+        CancellationToken cancellationToken)
     {
-        var result = await _ticketService.DeleteAsync(ticketId, cancellationToken);
+        var result = await _ticketService.DeleteAsync(
+            ticketId,
+            cancellationToken);
+
         return HandleResult(result);
     }
 }
