@@ -1,7 +1,8 @@
+using HelpDisk.Application.Abstractions;
 using HelpDisk.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 using HelpDisk.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 namespace HelpDisk.API.Extensions;
 
 /// <summary>
@@ -66,6 +67,14 @@ public static class MigrationExtensions
 
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-        IdentitySeeder.SeedAsync(roleManager,userManager).GetAwaiter().GetResult();
+        IdentitySeeder.SeedAsync(roleManager, userManager).GetAwaiter().GetResult();
+
+        // Seed realistic test data: companies, categories, agent/customer users,
+        // and 15 tickets covering every status and priority combination.
+        // ITicketNumberGenerator is resolved from the scope so the SQL Server
+        // sequence produces real, consecutive ticket numbers.
+        var ticketNumberGenerator = scope.ServiceProvider
+            .GetRequiredService<ITicketNumberGenerator>();
+        DataSeeder.SeedAsync(dbContext, userManager, ticketNumberGenerator).GetAwaiter().GetResult();
     }
 }

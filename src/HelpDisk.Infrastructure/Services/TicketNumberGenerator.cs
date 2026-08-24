@@ -1,4 +1,6 @@
-﻿using HelpDisk.Application.Abstractions;
+﻿using System.Data;
+
+using HelpDisk.Application.Abstractions;
 using HelpDisk.Infrastructure.Persistence;
 
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +23,20 @@ public sealed class TicketNumberGenerator : ITicketNumberGenerator
     public async Task<string> GenerateAsync(
         CancellationToken cancellationToken = default)
     {
-        var number = await _context.Database
-            .SqlQueryRaw<long>(
-                "SELECT NEXT VALUE FOR TicketNumberSequence")
-            .SingleAsync(cancellationToken);
+        var connection = _context.Database.GetDbConnection();
+
+        if (connection.State != ConnectionState.Open)
+        {
+            await connection.OpenAsync(cancellationToken);
+        }
+
+        await using var command = connection.CreateCommand();
+
+        command.CommandText = "SELECT NEXT VALUE FOR TicketNumberSequence";
+
+        var result = await command.ExecuteScalarAsync(cancellationToken);
+
+        var number = Convert.ToInt64(result);
 
         return $"TKT-{_dateTimeProvider.UtcNow.Year}-{number:D5}";
     }

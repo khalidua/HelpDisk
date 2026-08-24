@@ -288,10 +288,67 @@ for (i = 0, l = charts.length; i < l; i++) {
 
 var assemblies = [
   {
+    "name": "HelpDisk.Application",
+    "classes": [
+      { "name": "HelpDisk.Application.Abstractions.FileStorageErrors", "rp": "HelpDisk.Application_FileStorageErrors.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Abstractions.IdentityErrors", "rp": "HelpDisk.Application_IdentityErrors.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Abstractions.UserInfo", "rp": "HelpDisk.Application_UserInfo.html", "cl": 4, "ucl": 4, "cal": 8, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.DependencyInjection", "rp": "HelpDisk.Application_DependencyInjection.html", "cl": 0, "ucl": 19, "cal": 19, "tl": 80, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Agents.AgentErrors", "rp": "HelpDisk.Application_AgentErrors.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Agents.AgentService", "rp": "HelpDisk.Application_AgentService.html", "cl": 0, "ucl": 70, "cal": 70, "tl": 128, "cb": 0, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Agents.Dtos.AgentResponse", "rp": "HelpDisk.Application_AgentResponse.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Agents.Dtos.CreateAgentRequest", "rp": "HelpDisk.Application_CreateAgentRequest.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Agents.Dtos.UpdateAgentRequest", "rp": "HelpDisk.Application_UpdateAgentRequest.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 6, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Agents.Validators.CreateAgentRequestValidator", "rp": "HelpDisk.Application_CreateAgentRequestValidator.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Agents.Validators.UpdateAgentRequestValidator", "rp": "HelpDisk.Application_UpdateAgentRequestValidator.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 24, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Attachments.AttachmentErrors", "rp": "HelpDisk.Application_AttachmentErrors.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 38, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Attachments.AttachmentService", "rp": "HelpDisk.Application_AttachmentService.html", "cl": 0, "ucl": 158, "cal": 158, "tl": 249, "cb": 0, "tb": 70, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Attachments.Dtos.AttachmentDownloadResponse", "rp": "HelpDisk.Application_AttachmentDownloadResponse.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 6, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Attachments.Dtos.UploadAttachmentRequest", "rp": "HelpDisk.Application_UploadAttachmentRequest.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Auth.AuthErrors", "rp": "HelpDisk.Application_AuthErrors.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Auth.AuthService", "rp": "HelpDisk.Application_AuthService.html", "cl": 0, "ucl": 22, "cal": 22, "tl": 43, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Auth.Dtos.LoginRequest", "rp": "HelpDisk.Application_LoginRequest.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Auth.Dtos.RegisterRequest", "rp": "HelpDisk.Application_RegisterRequest.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Auth.Dtos.TokenResponse", "rp": "HelpDisk.Application_TokenResponse.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Auth.Validators.LoginRequestValidator", "rp": "HelpDisk.Application_LoginRequestValidator.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 19, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Auth.Validators.RegisterRequestValidator", "rp": "HelpDisk.Application_RegisterRequestValidator.html", "cl": 0, "ucl": 17, "cal": 17, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Categories.CategoryService", "rp": "HelpDisk.Application_CategoryService.html", "cl": 0, "ucl": 73, "cal": 73, "tl": 155, "cb": 0, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Categories.Dtos.CategoryResponse", "rp": "HelpDisk.Application_CategoryResponse.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Categories.Dtos.CreateCategoryRequest", "rp": "HelpDisk.Application_CreateCategoryRequest.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Categories.Dtos.UpdateCategoryRequest", "rp": "HelpDisk.Application_UpdateCategoryRequest.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Categories.Validators.CreateCategoryRequestValidator", "rp": "HelpDisk.Application_CreateCategoryRequestValidator.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 19, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Reports.Dtos.AverageResolutionTimePerCategoryResponse", "rp": "HelpDisk.Application_AverageResolutionTimePerCategoryResponse.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Reports.Dtos.OpenTicketsPerAgentResponse", "rp": "HelpDisk.Application_OpenTicketsPerAgentResponse.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Reports.Dtos.SlaBreachesThisMonthResponse", "rp": "HelpDisk.Application_SlaBreachesThisMonthResponse.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 3, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Reports.ReportService", "rp": "HelpDisk.Application_ReportService.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 47, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.AddCommentRequest", "rp": "HelpDisk.Application_AddCommentRequest.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 71, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.AssignTicketRequest", "rp": "HelpDisk.Application_AssignTicketRequest.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 71, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.CreateTicketRequest", "rp": "HelpDisk.Application_CreateTicketRequest.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 71, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.PagedResponse\u003CT\u003E", "rp": "HelpDisk.Application_PagedResponse_1.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 90, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.TicketAttachmentResponse", "rp": "HelpDisk.Application_TicketAttachmentResponse.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 90, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.TicketCommentResponse", "rp": "HelpDisk.Application_TicketCommentResponse.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 90, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.TicketListItemResponse", "rp": "HelpDisk.Application_TicketListItemResponse.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 90, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.TicketResponse", "rp": "HelpDisk.Application_TicketResponse.html", "cl": 0, "ucl": 17, "cal": 17, "tl": 90, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.TicketSearchRequest", "rp": "HelpDisk.Application_TicketSearchRequest.html", "cl": 2, "ucl": 10, "cal": 12, "tl": 71, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Dtos.UpdateTicketRequest", "rp": "HelpDisk.Application_UpdateTicketRequest.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 71, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.EventHandlers.TicketAssignedLoggingHandler", "rp": "HelpDisk.Application_TicketAssignedLoggingHandler.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 50, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Mapping.PaginationMappingExtensions", "rp": "HelpDisk.Application_PaginationMappingExtensions.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 110, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Mapping.TicketMappingConfig", "rp": "HelpDisk.Application_TicketMappingConfig.html", "cl": 0, "ucl": 16, "cal": 16, "tl": 110, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Mapping.TicketMappingExtensions", "rp": "HelpDisk.Application_TicketMappingExtensions.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 110, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.TicketService", "rp": "HelpDisk.Application_TicketService.html", "cl": 164, "ucl": 124, "cal": 288, "tl": 567, "cb": 43, "tb": 122, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.TicketSlaService", "rp": "HelpDisk.Application_TicketSlaService.html", "cl": 0, "ucl": 26, "cal": 26, "tl": 46, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Validators.AddCommentRequestValidator", "rp": "HelpDisk.Application_AddCommentRequestValidator.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 150, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Validators.AssignTicketRequestValidator", "rp": "HelpDisk.Application_AssignTicketRequestValidator.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 150, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Validators.CreateTicketRequestValidator", "rp": "HelpDisk.Application_CreateTicketRequestValidator.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 150, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Validators.TicketSearchRequestValidator", "rp": "HelpDisk.Application_TicketSearchRequestValidator.html", "cl": 0, "ucl": 29, "cal": 29, "tl": 150, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Application.Features.Tickets.Validators.UpdateTicketRequestValidator", "rp": "HelpDisk.Application_UpdateTicketRequestValidator.html", "cl": 0, "ucl": 10, "cal": 10, "tl": 150, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "UpdateCategoryRequestValidator", "rp": "HelpDisk.Application_UpdateCategoryRequestValidator.html", "cl": 0, "ucl": 10, "cal": 10, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+    ]},
+  {
     "name": "HelpDisk.Domain",
     "classes": [
-      { "name": "HelpDisk.Domain.Categories.Category", "rp": "HelpDisk.Domain_Category.html", "cl": 0, "ucl": 46, "cal": 46, "tl": 123, "cb": 0, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "HelpDisk.Domain.Categories.CategoryErrors", "rp": "HelpDisk.Domain_CategoryErrors.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 34, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Domain.Categories.Category", "rp": "HelpDisk.Domain_Category.html", "cl": 13, "ucl": 33, "cal": 46, "tl": 123, "cb": 3, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Domain.Categories.CategoryErrors", "rp": "HelpDisk.Domain_CategoryErrors.html", "cl": 3, "ucl": 15, "cal": 18, "tl": 34, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Companies.Company", "rp": "HelpDisk.Domain_Company.html", "cl": 0, "ucl": 10, "cal": 10, "tl": 19, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Primitives.AggregateRoot\u003CT\u003E", "rp": "HelpDisk.Domain_AggregateRoot_1.html", "cl": 5, "ucl": 5, "cal": 10, "tl": 69, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Primitives.Entity\u003CT\u003E", "rp": "HelpDisk.Domain_Entity_1.html", "cl": 3, "ucl": 4, "cal": 7, "tl": 41, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -300,14 +357,14 @@ var assemblies = [
       { "name": "HelpDisk.Domain.Reports.SlaBreachesThisMonth", "rp": "HelpDisk.Domain_SlaBreachesThisMonth.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 3, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Shared.Error", "rp": "HelpDisk.Domain_Error.html", "cl": 5, "ucl": 2, "cal": 7, "tl": 63, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Shared.Pagination\u003CT\u003E", "rp": "HelpDisk.Domain_Pagination_1.html", "cl": 0, "ucl": 16, "cal": 16, "tl": 46, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "HelpDisk.Domain.Shared.Result", "rp": "HelpDisk.Domain_Result.html", "cl": 14, "ucl": 5, "cal": 19, "tl": 85, "cb": 6, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Domain.Shared.Result", "rp": "HelpDisk.Domain_Result.html", "cl": 15, "ucl": 4, "cal": 19, "tl": 85, "cb": 6, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Shared.Result\u003CT\u003E", "rp": "HelpDisk.Domain_Result_1.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 51, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Tickets.Events.TicketAssignedDomainEvent", "rp": "HelpDisk.Domain_TicketAssignedDomainEvent.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 21, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "HelpDisk.Domain.Tickets.Events.TicketCreatedDomainEvent", "rp": "HelpDisk.Domain_TicketCreatedDomainEvent.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "HelpDisk.Domain.Tickets.Ticket", "rp": "HelpDisk.Domain_Ticket.html", "cl": 166, "ucl": 32, "cal": 198, "tl": 483, "cb": 51, "tb": 68, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "HelpDisk.Domain.Tickets.TicketAttachment", "rp": "HelpDisk.Domain_TicketAttachment.html", "cl": 15, "ucl": 3, "cal": 18, "tl": 44, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "HelpDisk.Domain.Tickets.TicketComment", "rp": "HelpDisk.Domain_TicketComment.html", "cl": 11, "ucl": 3, "cal": 14, "tl": 54, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "HelpDisk.Domain.Tickets.TicketErrors", "rp": "HelpDisk.Domain_TicketErrors.html", "cl": 98, "ucl": 3, "cal": 101, "tl": 161, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Domain.Tickets.Ticket", "rp": "HelpDisk.Domain_Ticket.html", "cl": 75, "ucl": 123, "cal": 198, "tl": 483, "cb": 17, "tb": 68, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Domain.Tickets.TicketAttachment", "rp": "HelpDisk.Domain_TicketAttachment.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 44, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Domain.Tickets.TicketComment", "rp": "HelpDisk.Domain_TicketComment.html", "cl": 0, "ucl": 14, "cal": 14, "tl": 54, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "HelpDisk.Domain.Tickets.TicketErrors", "rp": "HelpDisk.Domain_TicketErrors.html", "cl": 101, "ucl": 0, "cal": 101, "tl": 161, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -322,7 +379,79 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "HelpDisk.Domain", "class": "HelpDisk.Domain.Categories.Category", "reportPath": "HelpDisk.Domain_Category.html", "methodName": "Create(System.String,System.Int32)", "methodShortName": "Create(...)", "fileIndex": 0, "line": 63,
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Attachments.AttachmentService", "reportPath": "HelpDisk.Application_AttachmentService.html", "methodName": "UploadAsync()", "methodShortName": "UploadAsync()", "fileIndex": 0, "line": 35,
+    "metrics": [
+      { "value": 812, "exceeded": true },
+      { "value": 28, "exceeded": true },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Attachments.AttachmentService", "reportPath": "HelpDisk.Application_AttachmentService.html", "methodName": "DeleteAsync()", "methodShortName": "DeleteAsync()", "fileIndex": 0, "line": 192,
+    "metrics": [
+      { "value": 506, "exceeded": true },
+      { "value": 22, "exceeded": true },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Attachments.AttachmentService", "reportPath": "HelpDisk.Application_AttachmentService.html", "methodName": "DownloadAsync()", "methodShortName": "DownloadAsync()", "fileIndex": 0, "line": 136,
+    "metrics": [
+      { "value": 420, "exceeded": true },
+      { "value": 20, "exceeded": true },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Tickets.TicketService", "reportPath": "HelpDisk.Application_TicketService.html", "methodName": "AddCommentAsync()", "methodShortName": "AddCommentAsync()", "fileIndex": 0, "line": 396,
+    "metrics": [
+      { "value": 262, "exceeded": true },
+      { "value": 34, "exceeded": true },
+    ]},
+  {
+    "assembly": "HelpDisk.Domain", "class": "HelpDisk.Domain.Tickets.Ticket", "reportPath": "HelpDisk.Domain_Ticket.html", "methodName": "AddAttachment(System.String,System.String,System.Int64,System.String,System.String)", "methodShortName": "AddAttachment(...)", "fileIndex": 0, "line": 385,
+    "metrics": [
+      { "value": 210, "exceeded": true },
+      { "value": 14, "exceeded": false },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Tickets.TicketService", "reportPath": "HelpDisk.Application_TicketService.html", "methodName": "GetCommentsAsync()", "methodShortName": "GetCommentsAsync()", "fileIndex": 0, "line": 480,
+    "metrics": [
+      { "value": 109, "exceeded": true },
+      { "value": 16, "exceeded": true },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Tickets.TicketService", "reportPath": "HelpDisk.Application_TicketService.html", "methodName": "ReopenAsync()", "methodShortName": "ReopenAsync()", "fileIndex": 0, "line": 335,
+    "metrics": [
+      { "value": 88, "exceeded": true },
+      { "value": 18, "exceeded": true },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Categories.CategoryService", "reportPath": "HelpDisk.Application_CategoryService.html", "methodName": "UpdateAsync()", "methodShortName": "UpdateAsync()", "fileIndex": 0, "line": 94,
+    "metrics": [
+      { "value": 72, "exceeded": true },
+      { "value": 8, "exceeded": false },
+    ]},
+  {
+    "assembly": "HelpDisk.Domain", "class": "HelpDisk.Domain.Tickets.Ticket", "reportPath": "HelpDisk.Domain_Ticket.html", "methodName": "Reopen()", "methodShortName": "Reopen()", "fileIndex": 0, "line": 292,
+    "metrics": [
+      { "value": 72, "exceeded": true },
+      { "value": 8, "exceeded": false },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Tickets.TicketService", "reportPath": "HelpDisk.Application_TicketService.html", "methodName": "GetByIdAsync()", "methodShortName": "GetByIdAsync()", "fileIndex": 0, "line": 163,
+    "metrics": [
+      { "value": 52, "exceeded": true },
+      { "value": 16, "exceeded": true },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Categories.CategoryService", "reportPath": "HelpDisk.Application_CategoryService.html", "methodName": "CreateAsync()", "methodShortName": "CreateAsync()", "fileIndex": 0, "line": 47,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Tickets.TicketSlaService", "reportPath": "HelpDisk.Application_TicketSlaService.html", "methodName": "CheckExpiredSlaAsync()", "methodShortName": "CheckExpiredSlaAsync()", "fileIndex": 0, "line": 25,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "HelpDisk.Application", "class": "HelpDisk.Application.Features.Tickets.Validators.TicketSearchRequestValidator", "reportPath": "HelpDisk.Application_TicketSearchRequestValidator.html", "methodName": "BeValidSortField(System.String)", "methodShortName": "BeValidSortField(...)", "fileIndex": 0, "line": 144,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -334,9 +463,15 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
+    "assembly": "HelpDisk.Domain", "class": "HelpDisk.Domain.Tickets.Ticket", "reportPath": "HelpDisk.Domain_Ticket.html", "methodName": "AddComment(System.String,System.String,System.Boolean)", "methodShortName": "AddComment(...)", "fileIndex": 0, "line": 357,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
     "assembly": "HelpDisk.Domain", "class": "HelpDisk.Domain.Tickets.Ticket", "reportPath": "HelpDisk.Domain_Ticket.html", "methodName": "Create(System.String,System.String,System.String,HelpDisk.Domain.Tickets.TicketPriority,System.Guid,System.String)", "methodShortName": "Create(...)", "fileIndex": 0, "line": 186,
     "metrics": [
-      { "value": 16, "exceeded": false },
+      { "value": 38, "exceeded": true },
       { "value": 16, "exceeded": true },
     ]},
 ];
