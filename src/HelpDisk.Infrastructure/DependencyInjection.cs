@@ -86,6 +86,7 @@ public static class DependencyInjection
         // ---- Repositories and unit of work -----------------------------------
         services.AddScoped<ITicketRepository, TicketRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<HelpDisk.Domain.Companies.ICompanyRepository, CompanyRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

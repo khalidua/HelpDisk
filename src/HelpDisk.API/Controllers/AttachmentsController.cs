@@ -23,7 +23,7 @@ public sealed class AttachmentsController : ApiController
     [HttpPost]
     public async Task<IActionResult> Upload(
         Guid ticketId,
-        IFormFile file,
+        [FromForm] IFormFile file,
         CancellationToken cancellationToken)
     {
         if (file is null || file.Length == 0)

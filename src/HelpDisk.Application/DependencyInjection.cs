@@ -7,6 +7,7 @@ using HelpDisk.Application.Features.Agents;
 using HelpDisk.Application.Features.Attachments;
 using HelpDisk.Application.Features.Auth;
 using HelpDisk.Application.Features.Categories;
+using HelpDisk.Application.Features.Companies;
 using HelpDisk.Application.Features.Reports;
 using HelpDisk.Application.Features.Tickets;
 using HelpDisk.Application.Features.Tickets.EventHandlers;
@@ -45,6 +46,7 @@ public static class DependencyInjection
         // request and start handing back stale, cross-request tracked entities.
         services.AddScoped<ITicketService, TicketService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IAgentService, AgentService>();

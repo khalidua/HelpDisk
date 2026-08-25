@@ -452,20 +452,23 @@ public sealed class TicketService : ITicketService
 
         if (_currentUser.Role == "Admin" || _currentUser.Role == "Agent")
         {
-            Result slaResult;
+            if (ticket.SlaStatus == TicketSlaStatus.Pending)
+            {
+                Result slaResult;
 
-            if (_dateTime.UtcNow <= ticket.ResponseDeadlineUtc)
-            {
-                slaResult = ticket.MarkSlaMet();
-            }
-            else
-            {
-                slaResult = ticket.MarkSlaBreached();
-            }
+                if (_dateTime.UtcNow <= ticket.ResponseDeadlineUtc)
+                {
+                    slaResult = ticket.MarkSlaMet();
+                }
+                else
+                {
+                    slaResult = ticket.MarkSlaBreached();
+                }
 
-            if (slaResult.IsFailure)
-            {
-                return slaResult.Error;
+                if (slaResult.IsFailure)
+                {
+                    return slaResult.Error;
+                }
             }
         }
 

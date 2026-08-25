@@ -165,11 +165,29 @@ public sealed class TicketRepository : ITicketRepository
 
         var totalItems = await query.CountAsync(cancellationToken);
 
-        var items = await query
-            // Newest first. An unordered Skip/Take is undefined behaviour - the
-            // database may return rows in any order, so page 2 could repeat a
-            // row from page 1.
-            .OrderByDescending(t => t.CreatedOnUtc)
+        IOrderedQueryable<Ticket> orderedQuery;
+
+        if (string.Equals(sortBy, "Priority", StringComparison.OrdinalIgnoreCase))
+        {
+            orderedQuery = descending 
+                ? query.OrderByDescending(t => t.Priority).ThenByDescending(t => t.CreatedOnUtc)
+                : query.OrderBy(t => t.Priority).ThenByDescending(t => t.CreatedOnUtc);
+        }
+        else if (string.Equals(sortBy, "Status", StringComparison.OrdinalIgnoreCase))
+        {
+            orderedQuery = descending 
+                ? query.OrderByDescending(t => t.Status).ThenByDescending(t => t.CreatedOnUtc)
+                : query.OrderBy(t => t.Status).ThenByDescending(t => t.CreatedOnUtc);
+        }
+        else
+        {
+            // Default: CreatedOn (or unrecognized sortBy)
+            orderedQuery = descending 
+                ? query.OrderByDescending(t => t.CreatedOnUtc)
+                : query.OrderBy(t => t.CreatedOnUtc);
+        }
+
+        var items = await orderedQuery
             .ThenBy(t => t.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

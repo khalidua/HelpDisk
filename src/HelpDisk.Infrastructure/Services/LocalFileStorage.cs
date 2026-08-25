@@ -1,4 +1,4 @@
-﻿using HelpDisk.Application.Abstractions;
+using HelpDisk.Application.Abstractions;
 using HelpDisk.Domain.Shared;
 
 namespace HelpDisk.Infrastructure.Services;
@@ -90,13 +90,10 @@ public sealed class LocalFileStorage : IFileStorage
                 _rootPath,
                 storageKey);
 
-            if (!File.Exists(fullPath))
+            if (File.Exists(fullPath))
             {
-                return Task.FromResult<Result>(
-                    FileStorageErrors.FileNotFound);
+                File.Delete(fullPath);
             }
-
-            File.Delete(fullPath);
 
             return Task.FromResult(Result.Success());
         }

@@ -1,4 +1,4 @@
-﻿using HelpDisk.Domain.Shared;
+using HelpDisk.Domain.Shared;
 
 namespace HelpDisk.Application.Features.Auth;
 
@@ -8,7 +8,7 @@ public static class AuthErrors
         "Auth.RegistrationFailed",
         "The user could not be registered.");
 
-    public static readonly Error InvalidCredentials = Error.Validation(
+    public static readonly Error InvalidCredentials = Error.Unauthorized(
         "Auth.InvalidCredentials",
         "Invalid email or password.");
 

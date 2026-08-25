@@ -55,6 +55,20 @@ public static class Program
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
+        // ---- CORS -----------------------------------------------------------
+        const string FrontendCorsPolicy = "FrontendPolicy";
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(FrontendCorsPolicy, policy =>
+            {
+                policy.WithOrigins("http://localhost:3000")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials();
+            });
+        });
+
         // ---- Web -------------------------------------------------------------
         builder.Services
             .AddControllers()
@@ -152,7 +166,7 @@ public static class Program
             app.ApplyMigrations();
         }
 
-        app.UseHttpsRedirection();
+        app.UseCors(FrontendCorsPolicy);
 
         // Authentication reads and validates the JWT and populates
         // HttpContext.User with its claims.

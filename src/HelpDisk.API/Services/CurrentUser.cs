@@ -61,5 +61,23 @@ public sealed class CurrentUser : ICurrentUser
     _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role)
     ?? throw new UnauthorizedAccessException();
 
-    public Guid? CompanyId => throw new NotImplementedException();
+    public Guid? CompanyId
+    {
+        get
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+            if (user is null) return null;
+
+            var val = user.FindFirstValue("CompanyId")
+                   ?? user.FindFirstValue("companyId")
+                   ?? user.FindFirstValue(ClaimTypes.GroupSid);
+
+            if (Guid.TryParse(val, out var companyId))
+            {
+                return companyId;
+            }
+
+            return null;
+        }
+    }
 }
