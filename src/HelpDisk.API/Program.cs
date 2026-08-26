@@ -62,10 +62,13 @@ public static class Program
         {
             options.AddPolicy(FrontendCorsPolicy, policy =>
             {
-                policy.WithOrigins("http://localhost:3000")
-                      .AllowAnyMethod()
-                      .AllowAnyHeader()
-                      .AllowCredentials();
+                policy.WithOrigins(
+                    "http://localhost:3000",
+                    "https://helpdisk-zzyc.onrender.com"
+                )
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
             });
         });
 
