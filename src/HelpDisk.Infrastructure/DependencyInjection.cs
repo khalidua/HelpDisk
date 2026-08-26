@@ -48,6 +48,8 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException(
                 "Connection string 'Database' was not found. Check appsettings.json.");
 
+
+        Console.WriteLine($"DEBUG CONNECTION STRING: [{connectionString}]");
         // Fail loudly and immediately on a missing connection string, rather
         // than letting the app start and fail on the first request. A
         // misconfigured app that refuses to boot is far easier to diagnose than
