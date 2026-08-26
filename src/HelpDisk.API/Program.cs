@@ -147,24 +147,25 @@ public static class Program
         app.UseExceptionHandler();
 
         if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
+        {
+            app.UseSwagger();
 
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint(
-            "/swagger/v1/swagger.json",
-            "HelpDisk API v1");
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint(
+                    "/swagger/v1/swagger.json",
+                    "HelpDisk API v1");
 
-        // Serve Swagger UI at the root so pressing F5 lands somewhere
-        // useful instead of on a 404.
-        options.RoutePrefix = string.Empty;
-    });
-}
+                // Serve Swagger UI at the root so pressing F5 lands somewhere
+                // useful instead of on a 404.
+                options.RoutePrefix = string.Empty;
+            });
 
-// TEMPORARY: run migrations + Identity/Data seeders in production.
-// Remove this after the production database has been seeded.
-app.ApplyMigrations();
+            // Development only - see MigrationExtensions for why this must not
+            // run in production.
+            app.ApplyMigrations();
+        }
+
         app.UseCors(FrontendCorsPolicy);
 
         // Authentication reads and validates the JWT and populates
