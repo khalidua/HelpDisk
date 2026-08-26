@@ -18,7 +18,8 @@ COPY . .
 
 # Environment variable can be overridden at runtime, but Next.js bakes it during build if public.
 # However, for runtime standalone server, we can also provide it at runtime in docker-compose.
-ENV NEXT_PUBLIC_API_URL=http://localhost:8081
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 RUN npm run build
 
